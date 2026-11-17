@@ -36,6 +36,24 @@ from ._constants import (
 )
 from ._default_subscription import DefaultSubscription, default_subscription, type_subscription
 from ._default_topic import DefaultTopicId
+from ._durable_workflow import (
+    AttemptContext,
+    CheckpointConflictError,
+    CheckpointIntegrityError,
+    DurableWorkflowExecutor,
+    DurableWorkflowResult,
+    RunBusyError,
+    current_attempt,
+)
+from ._governed_workflow import (
+    AuditRecord,
+    RetryableError,
+    WorkflowExecutor,
+    WorkflowPolicy,
+    WorkflowResult,
+    WorkflowStep,
+    verify_audit,
+)
 from ._image import Image
 from ._intervention import (
     DefaultInterventionHandler,
@@ -68,6 +86,7 @@ from ._topic import TopicId
 from ._type_prefix_subscription import TypePrefixSubscription
 from ._type_subscription import TypeSubscription
 from ._types import FunctionCall
+from ._workflow_agent import agent_workflow_handler
 
 EVENT_LOGGER_NAME = EVENT_LOGGER_NAME_ALIAS
 """The name of the logger used for structured events."""
@@ -84,7 +103,12 @@ JSON_DATA_CONTENT_TYPE = JSON_DATA_CONTENT_TYPE_ALIAS
 PROTOBUF_DATA_CONTENT_TYPE = PROTOBUF_DATA_CONTENT_TYPE_ALIAS
 """The content type for Protobuf data."""
 
+from ._process_worker import ProcessWorker, WorkerError, WorkerLimits
+
 __all__ = [
+    "ProcessWorker",
+    "WorkerError",
+    "WorkerLimits",
     "Agent",
     "AgentId",
     "AgentProxy",
@@ -94,6 +118,21 @@ __all__ = [
     "CacheStore",
     "InMemoryStore",
     "CancellationToken",
+    "AuditRecord",
+    "RetryableError",
+    "AttemptContext",
+    "CheckpointConflictError",
+    "CheckpointIntegrityError",
+    "DurableWorkflowExecutor",
+    "DurableWorkflowResult",
+    "RunBusyError",
+    "current_attempt",
+    "WorkflowExecutor",
+    "WorkflowPolicy",
+    "WorkflowResult",
+    "WorkflowStep",
+    "verify_audit",
+    "agent_workflow_handler",
     "AgentInstantiationContext",
     "TopicId",
     "Subscription",

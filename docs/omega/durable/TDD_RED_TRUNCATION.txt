@@ -1,0 +1,23 @@
+.......F..                                                               [100%]
+=================================== FAILURES ===================================
+_____________________ test_unpinned_truncation_is_detected _____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_unpinned_truncation_is_de0')
+
+    @pytest.mark.asyncio
+    async def test_unpinned_truncation_is_detected(tmp_path):
+        async def f(data): return 1
+        e = engine(tmp_path/'db', {'f':f})
+        args = dict(tenant_id='t',run_id='r',workflow_revision='v')
+        steps = [WorkflowStep('a','f')]
+        await e.run(steps, **args)
+        with sqlite3.connect(tmp_path/'db') as db:
+            db.execute('DELETE FROM omega_events WHERE seq=1')
+>       with pytest.raises(CheckpointIntegrityError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'autogen_core._durable_workflow.CheckpointIntegrityError'>
+
+tests/test_omega_durable.py:147: Failed
+=========================== short test summary info ============================
+FAILED tests/test_omega_durable.py::test_unpinned_truncation_is_detected - Failed: DID NOT RAISE <class 'autogen_core._durable_workflow.CheckpointIntegrityError'>
+1 failed, 9 passed in 2.77s

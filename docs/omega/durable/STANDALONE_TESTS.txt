@@ -1,0 +1,14 @@
+test_completed_future_is_released (test_omega.CancellationTests.test_completed_future_is_released) ... ok
+test_cross_thread_future_cancellation (test_omega.CancellationTests.test_cross_thread_future_cancellation) ... ok
+test_reentrant_callback_and_failure_isolation (test_omega.CancellationTests.test_reentrant_callback_and_failure_isolation) ... Cancellation callback failed
+ok
+test_cycle_denied_and_retry_requires_idempotency (test_omega.WorkflowTests.test_cycle_denied_and_retry_requires_idempotency) ... ok
+test_dependencies_and_audit (test_omega.WorkflowTests.test_dependencies_and_audit) ... ok
+test_limits_and_timeout (test_omega.WorkflowTests.test_limits_and_timeout) ... ok
+test_parallelism_and_preflight_attempt_budget (test_omega.WorkflowTests.test_parallelism_and_preflight_attempt_budget) ... ok
+test_retry_failure_and_skip (test_omega.WorkflowTests.test_retry_failure_and_skip) ... ok
+
+----------------------------------------------------------------------
+Ran 8 tests in 0.082s
+
+OK

@@ -1,0 +1,27 @@
+{
+  "extension": "OMEGA Durable 2.0",
+  "upstream": "0.7.5",
+  "base_sha256": "effe64fd072a53c7b78f77920538b114a4e1108eda992509a8b7d43919c317b9",
+  "changed_or_added_sha256": {
+    "python/packages/autogen-core/tests/test_omega_durable.py": "0cab5fcd9b27291d2779de32225b1cb688286e6698ef8f779f3dd26a6a1796b3",
+    "python/packages/autogen-core/src/autogen_core/_durable_workflow.py": "671a76e67268b5718b79a2e9bd6e0bf772c06b23a554776af54a8f7899074e8a",
+    "python/packages/autogen-core/src/autogen_core/__init__.py": "ff98b5fbea1008a7b3160816b964c332e90d91b8f4d9dc171eeadaf4c54c1e21",
+    "docs/omega/README.md": "342b727214d7ce207a30864076a319473bec552321fd213c87351e30fb0edf69",
+    "docs/omega/ROADMAP.md": "e0cb8fde6cb2d310afdfe9adef0d8de7362c7e9c980860b2c3f9c7e03a5d4d31",
+    "docs/omega/durable/TDD_RED_TRUNCATION.txt": "343c2b4d094cbb6464791271e608fd1b5304f93523b470ee4fa27e283af6931a",
+    "docs/omega/durable/FOCUSED_TESTS.txt": "9732206ac2a28dfd667182bc1867ee1d8f71aadcd8745c569eaaf7ae9b939593",
+    "docs/omega/durable/COMPILE.txt": "763458585fcb2c9051cd5406f1d23fb1972e14e250a7b7807b30e5c45baf11fa",
+    "docs/omega/durable/README.md": "17324ff24aed22ef711713223044c4ef071875163df33ab7e75b2691877cd29f",
+    "docs/omega/durable/TDD_RED_API.txt": "1460ffb38ac23387a2f5d75097e53db77ddc7853c19dd9871161032018763235",
+    "docs/omega/durable/STANDALONE_TESTS.txt": "a4fe823a8ea697483efa3bccb05ad0f08a05c3ef9814f1ac76d62838b71e48fd",
+    "docs/omega/durable/FULL_CORE_TESTS.txt": "dea76397212466efd6e187f5144ef514d129cdffeffabb1772af6c40312b8c38",
+    "docs/omega/durable/DEPENDENCY_BLOCKER.txt": "326e94866992d883bf12209b92dd272446535fbe17db01983e791ec1132b6bb2"
+  },
+  "removed_files": [],
+  "verification": {
+    "focused": "18 passed",
+    "full_core": "152 passed; 10 collection errors (missing dependencies); exit 1",
+    "standalone": "8 passed",
+    "metadata": "source-tree imports via upstream version metadata shim (not installed distribution)"
+  }
+}

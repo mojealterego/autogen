@@ -1,0 +1,19 @@
+# Roadmap — evidence gates
+
+| ID | Scope | Status | Acceptance evidence |
+|---|---|---|---|
+| OM-01 | Cancellation robustness | implemented / locally tested | cross-thread, callback isolation, release, upstream cancellation tests |
+| OM-02 | Interceptor composition and queue accounting | implemented / integration tested locally | real runtime tests for drop, exception, None and pipeline |
+| OM-03 | Typed bounded DAG / retry policy | implemented / locally tested | cycle, unauthorized handler, budget, timeout, concurrency, dependent skip |
+| OM-04 | Runtime adapter | implemented / integration tested locally | real registered RoutedAgent with two dependent nodes |
+| OM-05 | Linked audit metadata | implemented / locally tested | hash verification and tampering tests |
+| OM-06 | Full upstream regression | blocked | install missing developers' dependencies and run complete upstream suite |
+| OM-07 | Durable checkpoint/recovery (single host) | implemented / locally integration tested | SQLite WAL, real child process failure, replay, retry key, persisted deadline, lock and journal tests; see `durable/` |
+| OM-08 | Process sandbox / cross-tenant isolation | open | negative authorized/unauthorized tests with real processes |
+| OM-09 | Distributed scheduling and model evaluation | open | multi-host failure injection and reproducible model/cost measurements |
+| OM-10 | Studio, .NET, AgentChat distribution builds | open | native builds and real integration tests, no assumptions |
+
+| OM-11 | Durable journal integrity | implemented / locally tested | atomic cursor, chained output and transition verification, exact external head |
+| OM-12 | Distributed durable execution and global admission control | open | authenticated service, leases/fencing across hosts, real fault injection |
+| OM-13 | Trusted Linux process workers | implemented / locally integration tested | per-process RLIMITs, bounded IPC, timeout and cancellation, durable replay; see `process/` |
+| OM-14 | Adversarial isolation, aggregate quotas and supervisor | open | cgroups, separate OS identity, network/filesystem restrictions, crash cleanup and escaped-process tests |
