@@ -65,3 +65,7 @@ Use trusted handlers and fixed recipients. The allowlist controls dispatch from 
 ## Resource Scheduler 4.0
 
 See [scheduler](scheduler/README.md) for opt-in shared resource reservations and tenant admission in a single event loop. Hard aggregate OS quotas and cross-host coordination remain open.
+
+## Cluster Coordinator 5.0
+
+See [cluster](cluster/README.md) for the opt-in durable multi-process admission, worker sessions, per-job fencing, heartbeat and recovery milestone. Single host/SQLite; authenticated cross-host transport and replicated storage remain open.

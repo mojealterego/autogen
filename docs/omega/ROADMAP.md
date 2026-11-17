@@ -14,9 +14,12 @@
 | OM-10 | Studio, .NET, AgentChat distribution builds | open | native builds and real integration tests, no assumptions |
 
 | OM-11 | Durable journal integrity | implemented / locally tested | atomic cursor, chained output and transition verification, exact external head |
-| OM-12 | Distributed durable execution and global admission control | open | authenticated service, leases/fencing across hosts, real fault injection |
+| OM-12 | Distributed durable execution and global admission control | partial (single-host substrate) | authenticated service, leases/fencing across hosts, real fault injection |
 | OM-13 | Trusted Linux process workers | implemented / locally integration tested | per-process RLIMITs, bounded IPC, timeout and cancellation, durable replay; see `process/` |
 | OM-14 | Adversarial isolation, aggregate quotas and supervisor | open | cgroups, separate OS identity, network/filesystem restrictions, crash cleanup and escaped-process tests |
 
 | OM-15 | Shared single-loop resource admission | implemented / locally integration tested | FIFO, global and tenant reservations, bounded queues, cancellation cleanup, two durable executors with real process workers; see `scheduler/` |
-| OM-16 | Cross-process/host global scheduler and fencing | open | durable quota coordinator, authenticated workers, leases, reconciliation and fault injection |
+| OM-16 | Cross-process/host global scheduler and fencing | partial | local durable multi-process coordinator (OM-17); cross-host authentication and HA (OM-18) remain open |
+| OM-17 | Durable local multi-process job coordinator | implemented / locally integration tested | SQLite WAL transactions, capability and quota admission, real concurrent spawned processes, real process crash, lease renewal, fencing, clock-rollback regression; see `cluster/` |
+| OM-18 | Authenticated cross-host scheduler transport and HA | open | authenticated worker/producer identities, network partitions, replicated authority and fencing enforced at external sinks; independent multi-host tests |
+| OM-19 | Durable DAG-to-cluster adapter | open | stable operation identity, remote result reconciliation, unknown-outcome recovery, cancellation and retry under process/network failures |

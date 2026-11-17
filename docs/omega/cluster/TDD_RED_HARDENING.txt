@@ -1,0 +1,32 @@
+..........FF.                                                            [100%]
+=================================== FAILURES ===================================
+________ test_rejected_expiry_cannot_revive_lease_after_clock_rollback _________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_rejected_expiry_cannot_re0')
+
+    def test_rejected_expiry_cannot_revive_lease_after_clock_rollback(tmp_path):
+        tick = [1000]
+        c = setup(tmp_path/'db', lease_ms=100, clock_ms=lambda: tick[0])
+        w = c.register('w1'); submit(c); a = c.claim(w)
+        tick[0] = 1100
+        with pytest.raises(LeaseLost): c.complete(w, a, 'expired')
+        tick[0] = 1000
+>       with pytest.raises(LeaseLost): c.complete(w, a, 'resurrected')
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'autogen_core._cluster_coordinator.LeaseLost'>
+
+python/packages/autogen-core/tests/test_omega_cluster.py:182: Failed
+_________________ test_worker_context_renewal_and_cancellation _________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_worker_context_renewal_an0')
+
+    @pytest.mark.asyncio
+    async def test_worker_context_renewal_and_cancellation(tmp_path):
+>       from autogen_core import current_cluster_lease
+E       ImportError: cannot import name 'current_cluster_lease' from 'autogen_core' (/mnt/data/omega5/autogen-main/python/packages/autogen-core/src/autogen_core/__init__.py)
+
+python/packages/autogen-core/tests/test_omega_cluster.py:188: ImportError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_cluster.py::test_rejected_expiry_cannot_revive_lease_after_clock_rollback - Failed: DID NOT RAISE <class 'autogen_core._cluster_coordinator.LeaseLost'>
+FAILED python/packages/autogen-core/tests/test_omega_cluster.py::test_worker_context_renewal_and_cancellation - ImportError: cannot import name 'current_cluster_lease' from 'autogen_core' (/mnt/data/omega5/autogen-main/python/packages/autogen-core/src/autogen_core/__init__.py)
+2 failed, 11 passed in 10.24s
