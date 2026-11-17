@@ -104,8 +104,15 @@ PROTOBUF_DATA_CONTENT_TYPE = PROTOBUF_DATA_CONTENT_TYPE_ALIAS
 """The content type for Protobuf data."""
 
 from ._process_worker import ProcessWorker, WorkerError, WorkerLimits
+from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
+    "AdmissionDenied",
+    "QueueFull",
+    "Resources",
+    "ResourceScheduler",
+    "SchedulerSnapshot",
+    "scheduled_handler",
     "ProcessWorker",
     "WorkerError",
     "WorkerLimits",

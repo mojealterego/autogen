@@ -17,3 +17,6 @@
 | OM-12 | Distributed durable execution and global admission control | open | authenticated service, leases/fencing across hosts, real fault injection |
 | OM-13 | Trusted Linux process workers | implemented / locally integration tested | per-process RLIMITs, bounded IPC, timeout and cancellation, durable replay; see `process/` |
 | OM-14 | Adversarial isolation, aggregate quotas and supervisor | open | cgroups, separate OS identity, network/filesystem restrictions, crash cleanup and escaped-process tests |
+
+| OM-15 | Shared single-loop resource admission | implemented / locally integration tested | FIFO, global and tenant reservations, bounded queues, cancellation cleanup, two durable executors with real process workers; see `scheduler/` |
+| OM-16 | Cross-process/host global scheduler and fencing | open | durable quota coordinator, authenticated workers, leases, reconciliation and fault injection |

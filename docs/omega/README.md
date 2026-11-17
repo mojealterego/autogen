@@ -61,3 +61,7 @@ The standalone unittest suite deliberately loads exact source files for offline 
 ## Security and scope
 
 Use trusted handlers and fixed recipients. The allowlist controls dispatch from this executor, not the permissions of agents after dispatch. Agent code can perform side effects and must implement its own authorization, idempotency storage and cancellation cooperation. A blocking handler or one that suppresses cancellation cannot be forcibly killed by asyncio. Enforce hard deadlines, CPU/memory limits, filesystem/network isolation and tenant authentication in an external process/container runtime. The output limit applies to serialized output, not peak memory allocated by a handler. Multiple concurrent executor runs each have their own budget; an external admission controller is needed for a global budget. Audit records are in memory until exported by the caller; this release does not implement crash recovery, signed durable checkpoints, distributed consensus, real-model benchmarks, or deployment.
+
+## Resource Scheduler 4.0
+
+See [scheduler](scheduler/README.md) for opt-in shared resource reservations and tenant admission in a single event loop. Hard aggregate OS quotas and cross-host coordination remain open.

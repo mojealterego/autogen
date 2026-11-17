@@ -1,0 +1,45 @@
+.........F                                                               [100%]
+=================================== FAILURES ===================================
+______ test_individual_tenant_queue_limit_preserves_other_tenant_capacity ______
+
+    def test_individual_tenant_queue_limit_preserves_other_tenant_capacity():
+        async def run():
+            sc = scheduler(max_queue=4, max_queued_per_tenant=1)
+            async def wait(tenant):
+                async with sc.reserve(tenant, R(1, 100, 100)): pass
+            async with sc.reserve('a', R(2, 200, 200)):
+                first = asyncio.create_task(wait('a')); await asyncio.sleep(0)
+                with pytest.raises(s.QueueFull): await wait('a')
+                second = asyncio.create_task(wait('b')); await asyncio.sleep(0)
+                assert sc.snapshot().queued == 2
+            await asyncio.gather(first, second)
+            assert sc.snapshot().active == 0
+>       asyncio.run(run())
+
+python/packages/autogen-core/omega_tests/test_scheduler.py:161: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.13/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+python/packages/autogen-core/omega_tests/test_scheduler.py:151: in run
+    sc = scheduler(max_queue=4, max_queued_per_tenant=1)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+kwargs = {'max_queue': 4, 'max_queued_per_tenant': 1}
+
+    def scheduler(**kwargs):
+>       return s.ResourceScheduler(R(2, 200, 200), {'a': R(2, 200, 200), 'b': R(1, 100, 100)}, **kwargs)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: ResourceScheduler.__init__() got an unexpected keyword argument 'max_queued_per_tenant'
+
+python/packages/autogen-core/omega_tests/test_scheduler.py:19: TypeError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/omega_tests/test_scheduler.py::test_individual_tenant_queue_limit_preserves_other_tenant_capacity - TypeError: ResourceScheduler.__init__() got an unexpected keyword argument 'max_queued_per_tenant'
+1 failed, 9 passed in 0.14s
