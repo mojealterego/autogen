@@ -17,7 +17,7 @@ from contextlib import contextmanager
 from contextvars import ContextVar
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Protocol
 
 from ._resource_scheduler import Resources
 
@@ -95,6 +95,20 @@ class WorkerSpec:
 class WorkerSession:
     worker_id: str
     token: str = field(repr=False)
+
+
+@dataclass(frozen=True)
+class JobFence:
+    """Minimal reference to a current lease; authority remains in the database."""
+    tenant: str
+    job_id: str
+    fence: int
+
+    def __post_init__(self) -> None:
+        _name(self.tenant)
+        _name(self.job_id)
+        if type(self.fence) is not int or not 1 <= self.fence < 2**63:
+            raise ValueError('invalid fence')
 
 
 @dataclass(frozen=True)
@@ -387,15 +401,16 @@ class ClusterCoordinator:
                 return JobLease(tenant,row['job_id'],handler,json.loads(row['payload']),demand,fence,key,expires)
             return None
 
-    def _lease(self, db: sqlite3.Connection, now: int, session: WorkerSession, lease: JobLease) -> sqlite3.Row:
+    def _lease(self, db: sqlite3.Connection, now: int, session: WorkerSession, lease: JobLease | JobFence) -> sqlite3.Row:
         self._session(db,now,session)
+        JobFence(lease.tenant, lease.job_id, lease.fence)
         row = self._job(db,lease.tenant,lease.job_id)
         if (row['state'] != 'leased' or row['worker_id'] != session.worker_id or row['fence'] != lease.fence
                 or row['token_hash'] != _digest(session.token) or row['expires_ms'] <= now):
             raise LeaseLost('stale job fence or expired lease')
         return row
 
-    def renew(self, session: WorkerSession, lease: JobLease) -> int:
+    def renew(self, session: WorkerSession, lease: JobLease | JobFence) -> int:
         with self._transaction() as (db,now):
             self._reap(db,now)
             row = self._lease(db,now,session,lease)
@@ -404,7 +419,7 @@ class ClusterCoordinator:
             db.execute('UPDATE omega_cluster_jobs SET expires_ms=? WHERE seq=?',(expires,row['seq']))
             return expires
 
-    def _finish(self, session: WorkerSession, lease: JobLease, *, success: bool, data: str | None,
+    def _finish(self, session: WorkerSession, lease: JobLease | JobFence, *, success: bool, data: str | None,
                 retry: bool, uncertain: bool = False) -> JobSnapshot:
         with self._transaction() as (db,now):
             self._reap(db,now)
@@ -415,15 +430,15 @@ class ClusterCoordinator:
                        expires_ms=NULL WHERE seq=?''',(state,data,row['seq']))
             return self._snapshot(self._job(db,lease.tenant,lease.job_id))
 
-    def complete(self, session: WorkerSession, lease: JobLease, result: Any) -> JobSnapshot:
+    def complete(self, session: WorkerSession, lease: JobLease | JobFence, result: Any) -> JobSnapshot:
         return self._finish(session,lease,success=True,data=_canonical(result,self._max_payload),retry=False)
 
-    def fail(self, session: WorkerSession, lease: JobLease, *, retry: bool = False) -> JobSnapshot:
+    def fail(self, session: WorkerSession, lease: JobLease | JobFence, *, retry: bool = False) -> JobSnapshot:
         if type(retry) is not bool:
             raise ValueError('invalid retry flag')
         return self._finish(session,lease,success=False,data=None,retry=retry)
 
-    def abandon(self, session: WorkerSession, lease: JobLease) -> JobSnapshot:
+    def abandon(self, session: WorkerSession, lease: JobLease | JobFence) -> JobSnapshot:
         """Unknown side-effect outcome; only declared idempotent jobs may retry."""
         return self._finish(session,lease,success=False,data=None,retry=True,uncertain=True)
 
@@ -447,6 +462,18 @@ async def _database_call(function: Callable[..., Any], *args: Any) -> Any:
     return task.result()
 
 
+class ClusterWorkerBackend(Protocol):
+    """Synchronous local or remote authority used by ClusterWorker."""
+    @property
+    def lease_ms(self) -> int: ...
+    def heartbeat(self, session: WorkerSession) -> int: ...
+    def claim(self, session: WorkerSession) -> JobLease | None: ...
+    def renew(self, session: WorkerSession, lease: JobLease | JobFence) -> int: ...
+    def complete(self, session: WorkerSession, lease: JobLease | JobFence, result: Any) -> JobSnapshot: ...
+    def fail(self, session: WorkerSession, lease: JobLease | JobFence, *, retry: bool = False) -> JobSnapshot: ...
+    def abandon(self, session: WorkerSession, lease: JobLease | JobFence) -> JobSnapshot: ...
+
+
 class ClusterWorker:
     """Sequential, cooperative async worker with periodic lease renewal.
 
@@ -455,7 +482,7 @@ class ClusterWorker:
     process supervisor. No side-effect exactly-once guarantee is implied.
     """
 
-    def __init__(self, coordinator: ClusterCoordinator, session: WorkerSession,
+    def __init__(self, coordinator: ClusterWorkerBackend, session: WorkerSession,
                  handlers: Mapping[str, Callable[[Mapping[str,Any]], Awaitable[Any]]], *,
                  heartbeat_interval: float | None = None) -> None:
         interval = coordinator.lease_ms/3000 if heartbeat_interval is None else heartbeat_interval

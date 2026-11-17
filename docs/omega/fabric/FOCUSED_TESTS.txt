@@ -1,0 +1,404 @@
+........F............................F..F............F.................. [ 98%]
+.                                                                        [100%]
+=================================== FAILURES ===================================
+________________________ test_roundtrip_and_environment ________________________
+
+fut = <_GatheringFuture finished exception=CancelledError()>
+timeout = 29.998309718999963
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        If the task suppresses the cancellation and returns a value instead,
+        that value is returned.
+    
+        This function is a coroutine.
+        """
+        # The special case for timeout <= 0 is for the following case:
+        #
+        # async def test_waitfor():
+        #     func_started = False
+        #
+        #     async def func():
+        #         nonlocal func_started
+        #         func_started = True
+        #
+        #     try:
+        #         await asyncio.wait_for(func(), 0)
+        #     except asyncio.TimeoutError:
+        #         assert not func_started
+        #     else:
+        #         assert False
+        #
+        # asyncio.run(test_waitfor())
+    
+    
+        if timeout is not None and timeout <= 0:
+            fut = ensure_future(fut)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise TimeoutError from exc
+    
+        async with timeouts.timeout(timeout):
+>           return await fut
+                   ^^^^^^^^^
+
+/usr/lib/python3.13/asyncio/tasks.py:507: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/packages/autogen-core/src/autogen_core/_process_worker.py:58: in _read_bounded
+    part = await stream.read(min(4096, maximum - len(data) + 1))
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/streams.py:730: in read
+    await self._wait_for_data('read')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <StreamReader eof transport=<_UnixReadPipeTransport closed fd=20 closed>>
+func_name = 'read'
+
+    async def _wait_for_data(self, func_name):
+        """Wait until feed_data() or feed_eof() is called.
+    
+        If stream was paused, automatically resume it.
+        """
+        # StreamReader uses a future to link the protocol feed_data() method
+        # to a read coroutine. Running two read coroutines at the same time
+        # would have an unexpected behaviour. It would not possible to know
+        # which coroutine would get the next data.
+        if self._waiter is not None:
+            raise RuntimeError(
+                f'{func_name}() called while another coroutine is '
+                f'already waiting for incoming data')
+    
+        assert not self._eof, '_wait_for_data after EOF'
+    
+        # Waiting for data while paused will make deadlock, so prevent it.
+        # This is essential for readexactly(n) for case when n > self._limit.
+        if self._paused:
+            self._paused = False
+            self._transport.resume_reading()
+    
+        self._waiter = self._loop.create_future()
+        try:
+>           await self._waiter
+E           asyncio.exceptions.CancelledError
+
+/usr/lib/python3.13/asyncio/streams.py:539: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-10/test_roundtrip_and_environment0')
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7f9f76911ba0>
+
+    def test_roundtrip_and_environment(tmp_path, monkeypatch):
+        monkeypatch.setenv("OMEGA_SECRET", "private")
+        p = script(tmp_path, 'import json, os, sys\nprint(json.dumps([json.load(sys.stdin), os.getenv("OMEGA_SECRET")]))')
+>       result = asyncio.run(worker.ProcessWorker(p)({'foo': 3}))
+                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/packages/autogen-core/omega_tests/test_process_worker.py:25: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.13/asyncio/runners.py:195: in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/runners.py:118: in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/base_events.py:725: in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+python/packages/autogen-core/src/autogen_core/_process_worker.py:119: in __call__
+    _, output, _, code = await asyncio.wait_for(asyncio.gather(*tasks), max(0, deadline - loop.time()))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/tasks.py:506: in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Timeout [expired]>
+exc_type = <class 'asyncio.exceptions.CancelledError'>
+exc_val = CancelledError(), exc_tb = <traceback object at 0x7f9f764a2d40>
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+    
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+    
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+    
+            if self._task.uncancel() <= self._cancelling and exc_type is not None:
+                # Since there are no new cancel requests, we're
+                # handling this.
+                if issubclass(exc_type, exceptions.CancelledError):
+>                   raise TimeoutError from exc_val
+E                   TimeoutError
+
+/usr/lib/python3.13/asyncio/timeouts.py:116: TimeoutError
+_____________________ test_real_process_worker_round_trip ______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-10/test_real_process_worker_round0')
+
+    @pytest.mark.asyncio
+    async def test_real_process_worker_round_trip(tmp_path):
+        c = setup(tmp_path/'db', lease_ms=2000)
+        w = c.register('w1'); submit(c)
+        script = tmp_path/'worker.py'; script.write_text('import sys,json\nprint(json.dumps(json.load(sys.stdin)["x"]+1))')
+        runner = ClusterWorker(c, w, {'f': ProcessWorker(script, WorkerLimits(timeout=2))}, heartbeat_interval=.1)
+>       result = await runner.run_once()
+                 ^^^^^^^^^^^^^^^^^^^^^^^
+
+python/packages/autogen-core/tests/test_omega_cluster.py:170: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:526: in run_once
+    heartbeat.result()  # fail closed on renewal error
+    ^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:514: in pulse
+    await _database_call(self._coordinator.renew,self._session,lease)
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:452: in _database_call
+    await asyncio.shield(task)
+/usr/lib/python3.13/asyncio/threads.py:25: in to_thread
+    return await loop.run_in_executor(None, func_call)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:416: in renew
+    row = self._lease(db,now,session,lease)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:405: in _lease
+    self._session(db,now,session)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <autogen_core._cluster_coordinator.ClusterCoordinator object at 0x7f9f76229220>
+db = <sqlite3.Connection object at 0x7f9f7622ac50>, now = 1794899718231
+session = WorkerSession(worker_id='w1')
+
+    def _session(self, db: sqlite3.Connection, now: int, session: WorkerSession) -> sqlite3.Row:
+        if (not isinstance(session,WorkerSession) or not isinstance(session.worker_id,str)
+                or session.worker_id not in self._workers or not isinstance(session.token,str)
+                or not session.token.isascii() or len(session.token) != 43):
+            raise LeaseLost('invalid worker session')
+        row = db.execute('SELECT * FROM omega_cluster_workers WHERE worker_id=?',(session.worker_id,)).fetchone()
+        if row is None or row['expires_ms'] <= now or not secrets.compare_digest(row['token_hash'],_digest(session.token)):
+>           raise LeaseLost('expired or replaced worker session')
+E           autogen_core._cluster_coordinator.LeaseLost: expired or replaced worker session
+
+python/packages/autogen-core/src/autogen_core/_cluster_coordinator.py:352: LeaseLost
+____________________ test_real_multiprocess_aggregate_quota ____________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-10/test_real_multiprocess_aggrega0')
+
+    def test_real_multiprocess_aggregate_quota(tmp_path):
+        path = tmp_path/'db'; c = setup(path, lease_ms=2000)
+        for name in ('j1','j2'): c.submit('a',name,'f',{},R(2,200,200))
+        ctx = mp.get_context('spawn'); event = ctx.Event(); queue = ctx.Queue()
+        ps = [ctx.Process(target=_claim_in_child,args=(path,name,event,queue)) for name in ('w1','w2')]
+        for p in ps: p.start()
+        try:
+>           event.set(); outcomes = [queue.get(timeout=15) for _ in ps]
+                                     ^^^^^^^^^^^^^^^^^^^^^
+
+python/packages/autogen-core/tests/test_omega_cluster.py:221: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <multiprocessing.queues.Queue object at 0x7f9f74cc0690>, block = True
+timeout = 14.99999644400009
+
+    def get(self, block=True, timeout=None):
+        if self._closed:
+            raise ValueError(f"Queue {self!r} is closed")
+        if block and timeout is None:
+            with self._rlock:
+                res = self._recv_bytes()
+            self._sem.release()
+        else:
+            if block:
+                deadline = time.monotonic() + timeout
+            if not self._rlock.acquire(block, timeout):
+                raise Empty
+            try:
+                if block:
+                    timeout = deadline - time.monotonic()
+                    if not self._poll(timeout):
+>                       raise Empty
+E                       _queue.Empty
+
+/usr/lib/python3.13/multiprocessing/queues.py:112: Empty
+_________________________ test_cross_process_run_lock __________________________
+
+fut = <coroutine object StreamReader.readline at 0x7f9f74d1c400>, timeout = 10
+
+    async def wait_for(fut, timeout):
+        """Wait for the single Future or coroutine to complete, with timeout.
+    
+        Coroutine will be wrapped in Task.
+    
+        Returns result of the Future or coroutine.  When a timeout occurs,
+        it cancels the task and raises TimeoutError.  To avoid the task
+        cancellation, wrap it in shield().
+    
+        If the wait is cancelled, the task is also cancelled.
+    
+        If the task suppresses the cancellation and returns a value instead,
+        that value is returned.
+    
+        This function is a coroutine.
+        """
+        # The special case for timeout <= 0 is for the following case:
+        #
+        # async def test_waitfor():
+        #     func_started = False
+        #
+        #     async def func():
+        #         nonlocal func_started
+        #         func_started = True
+        #
+        #     try:
+        #         await asyncio.wait_for(func(), 0)
+        #     except asyncio.TimeoutError:
+        #         assert not func_started
+        #     else:
+        #         assert False
+        #
+        # asyncio.run(test_waitfor())
+    
+    
+        if timeout is not None and timeout <= 0:
+            fut = ensure_future(fut)
+    
+            if fut.done():
+                return fut.result()
+    
+            await _cancel_and_wait(fut)
+            try:
+                return fut.result()
+            except exceptions.CancelledError as exc:
+                raise TimeoutError from exc
+    
+        async with timeouts.timeout(timeout):
+>           return await fut
+                   ^^^^^^^^^
+
+/usr/lib/python3.13/asyncio/tasks.py:507: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.13/asyncio/streams.py:562: in readline
+    line = await self.readuntil(sep)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^
+/usr/lib/python3.13/asyncio/streams.py:677: in readuntil
+    await self._wait_for_data('readuntil')
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <StreamReader eof transport=<_UnixReadPipeTransport closed fd=32 closed>>
+func_name = 'readuntil'
+
+    async def _wait_for_data(self, func_name):
+        """Wait until feed_data() or feed_eof() is called.
+    
+        If stream was paused, automatically resume it.
+        """
+        # StreamReader uses a future to link the protocol feed_data() method
+        # to a read coroutine. Running two read coroutines at the same time
+        # would have an unexpected behaviour. It would not possible to know
+        # which coroutine would get the next data.
+        if self._waiter is not None:
+            raise RuntimeError(
+                f'{func_name}() called while another coroutine is '
+                f'already waiting for incoming data')
+    
+        assert not self._eof, '_wait_for_data after EOF'
+    
+        # Waiting for data while paused will make deadlock, so prevent it.
+        # This is essential for readexactly(n) for case when n > self._limit.
+        if self._paused:
+            self._paused = False
+            self._transport.resume_reading()
+    
+        self._waiter = self._loop.create_future()
+        try:
+>           await self._waiter
+E           asyncio.exceptions.CancelledError
+
+/usr/lib/python3.13/asyncio/streams.py:539: CancelledError
+
+The above exception was the direct cause of the following exception:
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-10/test_cross_process_run_lock0')
+
+    @pytest.mark.asyncio
+    async def test_cross_process_run_lock(tmp_path):
+        db = tmp_path/'db'
+        code = '''
+    import asyncio, sys
+    from autogen_core import DurableWorkflowExecutor, WorkflowPolicy, WorkflowStep
+    async def f(data):
+        print('locked', flush=True)
+        await asyncio.sleep(60)
+    asyncio.run(DurableWorkflowExecutor(sys.argv[1], {'f':f}, WorkflowPolicy(frozenset({'f'}),retry_base=0)).run([WorkflowStep('a','f')],tenant_id='t',run_id='r',workflow_revision='v'))
+    '''
+        child = await asyncio.create_subprocess_exec(sys.executable,'-c',code,str(db),stdout=asyncio.subprocess.PIPE,stderr=asyncio.subprocess.PIPE)
+        try:
+            assert child.stdout is not None
+>           assert await asyncio.wait_for(child.stdout.readline(), 10) == b'locked\n'
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+python/packages/autogen-core/tests/test_omega_durable.py:218: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/usr/lib/python3.13/asyncio/tasks.py:506: in wait_for
+    async with timeouts.timeout(timeout):
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Timeout [expired]>
+exc_type = <class 'asyncio.exceptions.CancelledError'>
+exc_val = CancelledError(), exc_tb = <traceback object at 0x7f9f74df7fc0>
+
+    async def __aexit__(
+        self,
+        exc_type: Optional[Type[BaseException]],
+        exc_val: Optional[BaseException],
+        exc_tb: Optional[TracebackType],
+    ) -> Optional[bool]:
+        assert self._state in (_State.ENTERED, _State.EXPIRING)
+    
+        if self._timeout_handler is not None:
+            self._timeout_handler.cancel()
+            self._timeout_handler = None
+    
+        if self._state is _State.EXPIRING:
+            self._state = _State.EXPIRED
+    
+            if self._task.uncancel() <= self._cancelling and exc_type is not None:
+                # Since there are no new cancel requests, we're
+                # handling this.
+                if issubclass(exc_type, exceptions.CancelledError):
+>                   raise TimeoutError from exc_val
+E                   TimeoutError
+
+/usr/lib/python3.13/asyncio/timeouts.py:116: TimeoutError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/omega_tests/test_process_worker.py::test_roundtrip_and_environment - TimeoutError
+FAILED python/packages/autogen-core/tests/test_omega_cluster.py::test_real_process_worker_round_trip - autogen_core._cluster_coordinator.LeaseLost: expired or replaced worker session
+FAILED python/packages/autogen-core/tests/test_omega_cluster.py::test_real_multiprocess_aggregate_quota - _queue.Empty
+FAILED python/packages/autogen-core/tests/test_omega_durable.py::test_cross_process_run_lock - TimeoutError
+4 failed, 69 passed in 164.77s (0:02:44)

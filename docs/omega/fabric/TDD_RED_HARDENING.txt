@@ -1,0 +1,148 @@
+.......FF                                                                [100%]
+=================================== FAILURES ===================================
+_______________ test_lease_control_messages_do_not_echo_payload ________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-7/test_lease_control_messages_do0')
+pki = PosixPath('/tmp/pytest-of-root/pytest-7/fabric-pki0')
+
+    def test_lease_control_messages_do_not_echo_payload(tmp_path,pki):
+        with serving(pki,tmp_path/'db') as (_,connect,__):
+            a,w=connect('a'),connect('worker')
+            a.submit('a','j','f',{'sensitive':'example'},Resources(1,100,100))
+            session=w.register('w');lease=w.claim(session)
+            assert lease
+            # Observe actual client serialization, not the server handler implementation.
+            seen=[]; original=w._call
+            def capture(op,**args):
+                seen.append(args['lease']); return original(op,**args)
+            w._call=capture
+            w.renew(session,lease);w.complete(session,lease,1)
+>           assert seen==[{'tenant':'a','job_id':'j','fence':lease.fence}]*2
+E           AssertionError: assert [{'demand': {...r': 'f', ...}] == [{'fence': 1,...tenant': 'a'}]
+E             
+E             At index 0 diff: {'tenant': 'a', 'job_id': 'j', 'handler': 'f', 'payload': {'sensitive': 'example'}, 'demand': {'slots': 1, 'memory_bytes': 100, 'cpu_millis': 100}, 'fence': 1, 'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da', 'expires_ms': 1794899393515} != {'tenant': 'a', 'job_id': 'j', 'fence': 1}
+E             
+E             Full diff:
+E               [
+E                   {
+E             +         'demand': {
+E             +             'cpu_millis': 100,
+E             +             'memory_bytes': 100,
+E             +             'slots': 1,
+E             +         },
+E             +         'expires_ms': 1794899393515,
+E                       'fence': 1,
+E             +         'handler': 'f',
+E             +         'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da',
+E                       'job_id': 'j',
+E             +         'payload': {
+E             +             'sensitive': 'example',
+E             +         },
+E                       'tenant': 'a',
+E                   },
+E                   {
+E             +         'demand': {
+E             +             'cpu_millis': 100,
+E             +             'memory_bytes': 100,
+E             +             'slots': 1,
+E             +         },
+E             +         'expires_ms': 1794899393515,
+E                       'fence': 1,
+E             +         'handler': 'f',
+E             +         'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da',
+E                       'job_id': 'j',
+E             +         'payload': {
+E             +             'sensitive': 'example',
+E             +         },
+E                       'tenant': 'a',
+E                   },
+E               ]
+
+python/packages/autogen-core/tests/test_omega_fabric.py:186: AssertionError
+______________________ test_worker_in_independent_process ______________________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-7/test_worker_in_independent_pro0')
+pki = PosixPath('/tmp/pytest-of-root/pytest-7/fabric-pki0')
+
+    def test_worker_in_independent_process(tmp_path,pki):
+        import subprocess,sys
+        with serving(pki,tmp_path/'db') as (_,connect,address):
+            a=connect('a');a.submit('a','j','f',{'n':5},Resources(1,100,100))
+            child='''import asyncio,ssl,sys
+    from pathlib import Path
+    from autogen_core import FabricClient, ClusterWorker
+    root=Path(sys.argv[1]);ctx=ssl.create_default_context(cafile=str(root/'ca.pem'))
+    ctx.load_cert_chain(root/'worker.pem',root/'worker.key')
+    c=FabricClient(('127.0.0.1',int(sys.argv[2])),ctx,'localhost',timeout=2)
+    async def f(data): return data['n']+9
+    assert asyncio.run(ClusterWorker(c,c.register('w'),{'f':f}).run_once()).result==14
+    '''
+            result=subprocess.run([sys.executable,'-c',child,str(pki),str(address[1])],capture_output=True,text=True,timeout=10)
+>           assert result.returncode==0,result.stderr
+E           AssertionError: Traceback (most recent call last):
+E               File "<string>", line 6, in <module>
+E                 c=FabricClient(('127.0.0.1',int(sys.argv[2])),ctx,'localhost',timeout=2)
+E               File "/mnt/data/omega51/autogen-main/python/packages/autogen-core/src/autogen_core/_cluster_fabric.py", line 251, in __init__
+E                 _secure(tls, server=False)
+E                 ~~~~~~~^^^^^^^^^^^^^^^^^^^
+E               File "/mnt/data/omega51/autogen-main/python/packages/autogen-core/src/autogen_core/_cluster_fabric.py", line 56, in _secure
+E                 raise ValueError('TLS 1.2+, certificate validation and client hostname verification required')
+E             ValueError: TLS 1.2+, certificate validation and client hostname verification required
+E             
+E           assert 1 == 0
+E            +  where 1 = CompletedProcess(args=['/opt/pyvenv/bin/python', '-c', "import asyncio,ssl,sys\nfrom pathlib import Path\nfrom autogen...me verification required\')\nValueError: TLS 1.2+, certificate validation and client hostname verification required\n').returncode
+
+python/packages/autogen-core/tests/test_omega_fabric.py:203: AssertionError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_fabric.py::test_lease_control_messages_do_not_echo_payload - AssertionError: assert [{'demand': {...r': 'f', ...}] == [{'fence': 1,...tenant': 'a'}]
+  
+  At index 0 diff: {'tenant': 'a', 'job_id': 'j', 'handler': 'f', 'payload': {'sensitive': 'example'}, 'demand': {'slots': 1, 'memory_bytes': 100, 'cpu_millis': 100}, 'fence': 1, 'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da', 'expires_ms': 1794899393515} != {'tenant': 'a', 'job_id': 'j', 'fence': 1}
+  
+  Full diff:
+    [
+        {
+  +         'demand': {
+  +             'cpu_millis': 100,
+  +             'memory_bytes': 100,
+  +             'slots': 1,
+  +         },
+  +         'expires_ms': 1794899393515,
+            'fence': 1,
+  +         'handler': 'f',
+  +         'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da',
+            'job_id': 'j',
+  +         'payload': {
+  +             'sensitive': 'example',
+  +         },
+            'tenant': 'a',
+        },
+        {
+  +         'demand': {
+  +             'cpu_millis': 100,
+  +             'memory_bytes': 100,
+  +             'slots': 1,
+  +         },
+  +         'expires_ms': 1794899393515,
+            'fence': 1,
+  +         'handler': 'f',
+  +         'idempotency_key': 'ec547cac138b6a00f054756825ff77cbb702e2509aa044b07489ca358bc138da',
+            'job_id': 'j',
+  +         'payload': {
+  +             'sensitive': 'example',
+  +         },
+            'tenant': 'a',
+        },
+    ]
+FAILED python/packages/autogen-core/tests/test_omega_fabric.py::test_worker_in_independent_process - AssertionError: Traceback (most recent call last):
+    File "<string>", line 6, in <module>
+      c=FabricClient(('127.0.0.1',int(sys.argv[2])),ctx,'localhost',timeout=2)
+    File "/mnt/data/omega51/autogen-main/python/packages/autogen-core/src/autogen_core/_cluster_fabric.py", line 251, in __init__
+      _secure(tls, server=False)
+      ~~~~~~~^^^^^^^^^^^^^^^^^^^
+    File "/mnt/data/omega51/autogen-main/python/packages/autogen-core/src/autogen_core/_cluster_fabric.py", line 56, in _secure
+      raise ValueError('TLS 1.2+, certificate validation and client hostname verification required')
+  ValueError: TLS 1.2+, certificate validation and client hostname verification required
+  
+assert 1 == 0
+ +  where 1 = CompletedProcess(args=['/opt/pyvenv/bin/python', '-c', "import asyncio,ssl,sys\nfrom pathlib import Path\nfrom autogen...me verification required\')\nValueError: TLS 1.2+, certificate validation and client hostname verification required\n').returncode
+2 failed, 7 passed in 6.90s

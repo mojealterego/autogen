@@ -69,3 +69,10 @@ See [scheduler](scheduler/README.md) for opt-in shared resource reservations and
 ## Cluster Coordinator 5.0
 
 See [cluster](cluster/README.md) for the opt-in durable multi-process admission, worker sessions, per-job fencing, heartbeat and recovery milestone. Single host/SQLite; authenticated cross-host transport and replicated storage remain open.
+
+## Distributed Fabric 5.1
+
+See [fabric](fabric/README.md) for mutually authenticated bounded network RPC,
+certificate-bound tenant/worker identities and the remote worker backend.
+Single-authority network service; replication and independent multi-host gates
+remain open.

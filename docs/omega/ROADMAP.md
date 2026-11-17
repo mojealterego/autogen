@@ -7,7 +7,7 @@
 | OM-03 | Typed bounded DAG / retry policy | implemented / locally tested | cycle, unauthorized handler, budget, timeout, concurrency, dependent skip |
 | OM-04 | Runtime adapter | implemented / integration tested locally | real registered RoutedAgent with two dependent nodes |
 | OM-05 | Linked audit metadata | implemented / locally tested | hash verification and tampering tests |
-| OM-06 | Full upstream regression | blocked | install missing developers' dependencies and run complete upstream suite |
+| OM-06 | Full upstream regression | blocked | missing development dependencies and intermittent process/timing failure in 5.1 full suite; see `fabric/` evidence |
 | OM-07 | Durable checkpoint/recovery (single host) | implemented / locally integration tested | SQLite WAL, real child process failure, replay, retry key, persisted deadline, lock and journal tests; see `durable/` |
 | OM-08 | Process sandbox / cross-tenant isolation | open | negative authorized/unauthorized tests with real processes |
 | OM-09 | Distributed scheduling and model evaluation | open | multi-host failure injection and reproducible model/cost measurements |
@@ -21,5 +21,7 @@
 | OM-15 | Shared single-loop resource admission | implemented / locally integration tested | FIFO, global and tenant reservations, bounded queues, cancellation cleanup, two durable executors with real process workers; see `scheduler/` |
 | OM-16 | Cross-process/host global scheduler and fencing | partial | local durable multi-process coordinator (OM-17); cross-host authentication and HA (OM-18) remain open |
 | OM-17 | Durable local multi-process job coordinator | implemented / locally integration tested | SQLite WAL transactions, capability and quota admission, real concurrent spawned processes, real process crash, lease renewal, fencing, clock-rollback regression; see `cluster/` |
-| OM-18 | Authenticated cross-host scheduler transport and HA | open | authenticated worker/producer identities, network partitions, replicated authority and fencing enforced at external sinks; independent multi-host tests |
+| OM-18 | Authenticated cross-host scheduler transport and HA | partial (local mTLS transport verified) | authenticated worker/producer identities, network partitions, replicated authority and fencing enforced at external sinks; independent multi-host tests |
 | OM-19 | Durable DAG-to-cluster adapter | open | stable operation identity, remote result reconciliation, unknown-outcome recovery, cancellation and retry under process/network failures |
+| OM-20 | Certificate-bound bounded scheduler transport | implemented / locally integration tested | real mTLS, independent remote worker process, role/pin denial, stale fencing, saturation and lost response reconciliation; see `fabric/` |
+| OM-21 | Physical multi-host resilience and replicated authority | open | real network partition/reconnect, controlled failover with durable externally enforced fencing, no split brain |
