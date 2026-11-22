@@ -29,3 +29,5 @@
 | OM-23 | Late-outcome durable reconciliation | open | externally confirmed terminal result, journal continuation without replaying side effects |
 | OM-24 | Shared-database authority epoch & fail-closed takeover (5.3 local) | implemented / locally integration tested | transaction-atomic guard, rollback resistance, session revocation, independent processes, real mTLS stale leader rejection; `authority/` |
 | OM-25 | Replicated HA authority (5.3 distributed gate) | BLOCKED | independently replicated consensus store, physically separate hosts, partition/failover and external sink fencing required |
+| OM-26 | Adaptive model selection (6.0 local) | implemented / locally integration tested | tenant+global budgets, circuit breaker, latency EWMA, trust-bound fallback, real HTTP provider, durable workflow integration; `model-router/` |
+| OM-27 | Persistent distributed router cost ledger & genuine provider benchmark | open | atomic cross-process quotas, invoice reconciliation, real-provider evaluation dataset, p95/p99 benchmark and safe rollout |

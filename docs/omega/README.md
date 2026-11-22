@@ -86,3 +86,10 @@ bridge. Unknown outcomes are journaled as uncertain, not automatically retried.
 
 See [authority](authority/README.md). Epoch fencing and guarded coordinator
 transactions enable controlled local handoff, but do not provide replicated HA.
+
+## Adaptive Model Router 6.0
+
+See [model router](model-router/README.md) for an opt-in model registry,
+per-tenant budget admission, observed latency EWMA, cooldown circuit breaker,
+strict safe-fallback contract and concrete OpenAI-compatible HTTP provider.
+Routing telemetry is local and tests do not invoke a real LLM.

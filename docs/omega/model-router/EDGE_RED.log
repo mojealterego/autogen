@@ -1,0 +1,21 @@
+.........F.                                                              [100%]
+=================================== FAILURES ===================================
+__________ test_route_request_isolated_from_mutated_external_payload ___________
+
+    def test_route_request_isolated_from_mutated_external_payload():
+        original={'messages':[{'role':'user','content':'first'}]}
+        req=RouteRequest('t','text',100,100,original)
+        original['messages'][0]['content']='replaced'
+>       assert req.payload['messages'][0]['content']=='first'
+E       AssertionError: assert 'replaced' == 'first'
+E         
+E         - first
+E         + replaced
+
+python/packages/autogen-core/tests/test_omega_model_router.py:152: AssertionError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_model_router.py::test_route_request_isolated_from_mutated_external_payload - AssertionError: assert 'replaced' == 'first'
+  
+  - first
+  + replaced
+1 failed, 10 passed in 0.30s
