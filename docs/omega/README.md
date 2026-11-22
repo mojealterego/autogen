@@ -93,3 +93,8 @@ See [model router](model-router/README.md) for an opt-in model registry,
 per-tenant budget admission, observed latency EWMA, cooldown circuit breaker,
 strict safe-fallback contract and concrete OpenAI-compatible HTTP provider.
 Routing telemetry is local and tests do not invoke a real LLM.
+
+## Hierarchical Agent Swarms 7.0
+
+See [swarm](swarm/README.md) for fixed-agent hierarchical DAG delegation,
+tenant authorization, verifier veto and operator approval gates.

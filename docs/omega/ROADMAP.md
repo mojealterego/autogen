@@ -31,3 +31,4 @@
 | OM-25 | Replicated HA authority (5.3 distributed gate) | BLOCKED | independently replicated consensus store, physically separate hosts, partition/failover and external sink fencing required |
 | OM-26 | Adaptive model selection (6.0 local) | implemented / locally integration tested | tenant+global budgets, circuit breaker, latency EWMA, trust-bound fallback, real HTTP provider, durable workflow integration; `model-router/` |
 | OM-27 | Persistent distributed router cost ledger & genuine provider benchmark | open | atomic cross-process quotas, invoice reconciliation, real-provider evaluation dataset, p95/p99 benchmark and safe rollout |
+| OM-28 | Hierarchical bounded local agent swarm (7.0) | implemented / locally integration tested | hierarchy and tenant authorization, independent verification, operator grants, DAG bounded execution; `swarm/` |

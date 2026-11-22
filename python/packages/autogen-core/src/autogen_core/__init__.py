@@ -117,6 +117,7 @@ from ._distributed_dag import distributed_step_handler, ProducerBackend, RemoteS
 from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
+    "HierarchicalSwarm", "SwarmAgent", "SwarmNode", "SwarmPolicy", "SwarmReport", "SwarmDenied",
     "OpenAIChatProvider",
     "AdaptiveModelRouter", "ModelProfile", "ModelResponse", "RouteRequest", "TenantRoutePolicy",
     "RouteResult", "RouterSnapshot", "TenantUsage", "ModelHealth", "ModelAdmissionDenied",
@@ -207,3 +208,5 @@ __all__ = [
     "trace_invoke_agent_span",
     "trace_tool_span",
 ]
+
+from ._hierarchical_swarm import HierarchicalSwarm, SwarmAgent, SwarmNode, SwarmPolicy, SwarmReport, SwarmDenied
