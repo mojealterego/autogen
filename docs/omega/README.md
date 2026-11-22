@@ -81,3 +81,8 @@ remain open.
 
 See [distributed DAG](distributed-dag/README.md) for the opt-in cluster producer
 bridge. Unknown outcomes are journaled as uncertain, not automatically retried.
+
+## Authority fencing 5.3 (single-host subset)
+
+See [authority](authority/README.md). Epoch fencing and guarded coordinator
+transactions enable controlled local handoff, but do not provide replicated HA.

@@ -24,6 +24,7 @@ from ._cluster_coordinator import (
     LeaseLost, WorkerSession,
 )
 from ._resource_scheduler import Resources
+from ._authority_failover import LeadershipLost
 
 
 class FabricTransportError(RuntimeError):
@@ -121,7 +122,7 @@ def _lease(value: Any) -> JobLease:
     return JobLease(**{**d, 'demand': Resources(**_exact(d['demand'], 'slots', 'memory_bytes', 'cpu_millis'))})
 
 
-_ERRORS = {c.__name__: c for c in (ClusterDenied, ClusterConflict, LeaseLost, ValueError)}
+_ERRORS = {c.__name__: c for c in (ClusterDenied, ClusterConflict, LeaseLost, LeadershipLost, ValueError)}
 
 
 class _Handler(socketserver.BaseRequestHandler):
@@ -229,7 +230,7 @@ class FabricServer(socketserver.ThreadingMixIn, socketserver.TCPServer):
                 try:
                     value = self._dispatch(principal, request)
                     response = {'ok': True, 'value': value}
-                except (ClusterDenied, ClusterConflict, LeaseLost, ValueError) as exc:
+                except (ClusterDenied, ClusterConflict, LeaseLost, LeadershipLost, ValueError) as exc:
                     # No exception text, payloads, paths or tokens on the wire.
                     response = {'ok': False, 'error': type(exc).__name__}
                 except Exception:

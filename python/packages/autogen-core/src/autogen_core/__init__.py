@@ -110,10 +110,12 @@ from ._cluster_coordinator import (
     LeaseLost, TenantSpec, WorkerSession, WorkerSpec, current_cluster_lease,
 )
 from ._cluster_fabric import FabricClient, FabricPrincipal, FabricServer, FabricTransportError
+from ._authority_failover import AuthorityBusy, AuthorityGuard, AuthorityLeaseStore, LeadershipLease, LeadershipLost
 from ._distributed_dag import distributed_step_handler, ProducerBackend, RemoteStepFailed
 from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
+    "AuthorityBusy", "AuthorityGuard", "AuthorityLeaseStore", "LeadershipLease", "LeadershipLost",
     "distributed_step_handler", "ProducerBackend", "RemoteStepFailed", "OutcomeUnknownError",
     "FabricClient", "FabricPrincipal", "FabricServer", "FabricTransportError",
     "ClusterCoordinator", "ClusterConflict", "ClusterDenied", "ClusterWorker",

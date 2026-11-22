@@ -20,6 +20,7 @@ from pathlib import Path
 from typing import Any, Protocol
 
 from ._resource_scheduler import Resources
+from ._authority_failover import AuthorityGuard, LeadershipLost
 
 
 class ClusterDenied(RuntimeError):
@@ -171,7 +172,8 @@ class ClusterCoordinator:
                  workers: Mapping[str, WorkerSpec], *, lease_ms: int = 30_000,
                  max_jobs: int = 10_000, max_pending_per_tenant: int = 1024,
                  max_payload_bytes: int = 65_536, busy_timeout_ms: int = 5000,
-                 clock_ms: Callable[[], int] | None = None) -> None:
+                 clock_ms: Callable[[], int] | None = None,
+                 authority_guard: AuthorityGuard | None = None) -> None:
         _resources(capacity)
         for value, minimum, maximum in ((lease_ms, 10, 86_400_000), (max_jobs, 1, 1_000_000),
                                         (max_pending_per_tenant, 1, 1_000_000),
@@ -193,6 +195,9 @@ class ClusterCoordinator:
                     or not _fits((0,0,0), worker.capacity.vector, capacity)):
                 raise ValueError('invalid worker spec')
         self._path = Path(path).resolve()
+        if authority_guard is not None and (not isinstance(authority_guard, AuthorityGuard) or authority_guard.path != self._path):
+            raise ValueError('authority witness must share coordinator database')
+        self._authority_guard = authority_guard
         self._lease_ms = lease_ms
         self._max_jobs = max_jobs
         self._max_pending = max_pending_per_tenant
@@ -244,6 +249,21 @@ class ClusterCoordinator:
                 raise ValueError('invalid clock')
             now = max(tick, row['clock_ms'])
             db.execute('UPDATE omega_cluster_config SET clock_ms=? WHERE id=1', (now,))
+            # Atomic authority gate: the witness is in the SAME SQLite WAL
+            # transaction as coordinator mutations. A separate pre-RPC check
+            # would have a TOCTOU window during leader promotion.
+            enabled = db.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='omega_authority'").fetchone()
+            if enabled:
+                if self._authority_guard is None:
+                    db.commit()
+                    raise LeadershipLost('an authority guard is required')
+                try:
+                    self._authority_guard.check_db(db)
+                except LeadershipLost:
+                    db.commit()  # clock high-water must survive rejection
+                    raise
+            elif self._authority_guard is not None:
+                raise LeadershipLost('authority table disappeared')
             # Persist the observed time even if the caller's operation is
             # rejected. Otherwise a backward clock jump could revive a lease
             # that a previous rejected operation already observed expired.

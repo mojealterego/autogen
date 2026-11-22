@@ -27,3 +27,5 @@
 | OM-21 | Physical multi-host resilience and replicated authority | open | real network partition/reconnect, controlled failover with durable externally enforced fencing, no split brain |
 | OM-22 | Durable DAG producer bridge (5.2) | implemented / locally integration tested | stable job IDs, real mTLS + worker, lost ACK, terminal uncertainty, tenant check; `distributed-dag/` |
 | OM-23 | Late-outcome durable reconciliation | open | externally confirmed terminal result, journal continuation without replaying side effects |
+| OM-24 | Shared-database authority epoch & fail-closed takeover (5.3 local) | implemented / locally integration tested | transaction-atomic guard, rollback resistance, session revocation, independent processes, real mTLS stale leader rejection; `authority/` |
+| OM-25 | Replicated HA authority (5.3 distributed gate) | BLOCKED | independently replicated consensus store, physically separate hosts, partition/failover and external sink fencing required |
