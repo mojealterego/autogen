@@ -25,3 +25,5 @@
 | OM-19 | Durable DAG-to-cluster adapter | open | stable operation identity, remote result reconciliation, unknown-outcome recovery, cancellation and retry under process/network failures |
 | OM-20 | Certificate-bound bounded scheduler transport | implemented / locally integration tested | real mTLS, independent remote worker process, role/pin denial, stale fencing, saturation and lost response reconciliation; see `fabric/` |
 | OM-21 | Physical multi-host resilience and replicated authority | open | real network partition/reconnect, controlled failover with durable externally enforced fencing, no split brain |
+| OM-22 | Durable DAG producer bridge (5.2) | implemented / locally integration tested | stable job IDs, real mTLS + worker, lost ACK, terminal uncertainty, tenant check; `distributed-dag/` |
+| OM-23 | Late-outcome durable reconciliation | open | externally confirmed terminal result, journal continuation without replaying side effects |

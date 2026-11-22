@@ -43,6 +43,7 @@ from ._durable_workflow import (
     DurableWorkflowExecutor,
     DurableWorkflowResult,
     RunBusyError,
+    OutcomeUnknownError,
     current_attempt,
 )
 from ._governed_workflow import (
@@ -109,9 +110,11 @@ from ._cluster_coordinator import (
     LeaseLost, TenantSpec, WorkerSession, WorkerSpec, current_cluster_lease,
 )
 from ._cluster_fabric import FabricClient, FabricPrincipal, FabricServer, FabricTransportError
+from ._distributed_dag import distributed_step_handler, ProducerBackend, RemoteStepFailed
 from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
+    "distributed_step_handler", "ProducerBackend", "RemoteStepFailed", "OutcomeUnknownError",
     "FabricClient", "FabricPrincipal", "FabricServer", "FabricTransportError",
     "ClusterCoordinator", "ClusterConflict", "ClusterDenied", "ClusterWorker",
     "ClusterWorkerBackend", "JobFence", "JobLease", "JobSnapshot", "LeaseLost", "TenantSpec", "WorkerSession", "WorkerSpec",

@@ -76,3 +76,8 @@ See [fabric](fabric/README.md) for mutually authenticated bounded network RPC,
 certificate-bound tenant/worker identities and the remote worker backend.
 Single-authority network service; replication and independent multi-host gates
 remain open.
+
+## Distributed DAG 5.2
+
+See [distributed DAG](distributed-dag/README.md) for the opt-in cluster producer
+bridge. Unknown outcomes are journaled as uncertain, not automatically retried.

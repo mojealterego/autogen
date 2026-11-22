@@ -34,6 +34,10 @@ class CheckpointIntegrityError(RuntimeError):
     """The persisted journal or pinned head failed verification."""
 
 
+class OutcomeUnknownError(RuntimeError):
+    """Remote side effects may have occurred; do not mark failed or retry."""
+
+
 @dataclass(frozen=True)
 class AttemptContext:
     tenant_id: str
@@ -256,6 +260,8 @@ class DurableWorkflowExecutor:
                     else:
                         encoded = _canonical(value)
                         event = _Event(step.id, 'succeeded', attempt, json.loads(encoded)) if len(encoded) <= self._policy.max_result_bytes else _Event(step.id, 'failed', attempt)
+            except OutcomeUnknownError:
+                event = _Event(step.id, 'uncertain', attempt)
             except RetryableError:
                 event = _Event(step.id, 'retry_pending' if step.idempotent and attempt < step.attempts else 'failed', attempt)
             except asyncio.TimeoutError:
