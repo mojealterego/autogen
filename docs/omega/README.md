@@ -98,3 +98,8 @@ Routing telemetry is local and tests do not invoke a real LLM.
 
 See [swarm](swarm/README.md) for fixed-agent hierarchical DAG delegation,
 tenant authorization, verifier veto and operator approval gates.
+
+## Workflow Evolution 8.0
+
+See [evolution](evolution/README.md) for deterministic fixture-based policy
+comparisons, operator-gated promotion and measured rollback.
