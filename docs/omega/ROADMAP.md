@@ -37,3 +37,10 @@
 | OM-31 | Local autonomous process service supervisor (10.0) | implemented / locally integration tested | real child processes, bounded restarts, health checks, secret allowlist, process-group cleanup, audit; `infrastructure/` |
 | OM-32 | Four-stage OMEGA 7.0–10.0 local acceptance | partial — focused test gate PASS, upstream gate BLOCKED | `swarm/`, `evolution/`, `neurosymbolic/`, `infrastructure/`; 141 focused tests, 247 core tests, 10 dependency collection errors |
 | OM-33 | Offline dependency integrity and replay gate | implemented / locally tested | 5 verified wheel-auditor tests, SHA-256 against pinned uv.lock, new full-core evidence, remaining blockers documented; `dependency-gate/` |
+| OM-34 | Bounded OODA substrate (11.0) | implemented / locally integration tested | 17 new tests, 158 focused OMEGA pass; memory, deterministic world, ticket idempotency, HITL, actor integration; `cognitive-ooda/` |
+| OM-35 | Learned Titans MAL and real model surprise gradients | open | trained neural memory, checkpoints, tokenizer and measured recall |
+| OM-36 | R³Mem virtual-token reversible context compression | open | learned reversible model and evaluated reconstruction fidelity |
+| OM-37 | Real CWM + isolated trajectory sandbox | open | real model inference, network/FS isolation, independent security tests |
+| OM-38 | LTN learned constraints + hard formal verifier | open | actual LTN training and SMT/proof artifacts where claimed |
+| OM-39 | Durable authenticated multi-host HITL | open | identity provider, PostgreSQL, genuine actor auth, revoke, signed audit, crash recovery |
+| OM-40 | RSI controlled source evolution | open | separate evaluation, signed approvals, tests, releases, bounded rollback |

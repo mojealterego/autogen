@@ -1,0 +1,46 @@
+............FF.                                                          [100%]
+=================================== FAILURES ===================================
+__________ test_retry_of_same_observation_cannot_mint_second_approval __________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_retry_of_same_observation0')
+
+    @pytest.mark.asyncio
+    async def test_retry_of_same_observation_cannot_mint_second_approval(tmp_path):
+        m=EpisodicStore(tmp_path/'m.sqlite');a=ApprovalLedger(tmp_path/'a.sqlite',{'t':frozenset({'admin'})})
+        o=CognitiveOODA(m,WorldModel(),a)
+        ev=CognitiveEvent('t','event-007','telemetry',{'count':1})
+        actions=(WorldAction('increment','cpu',1),)
+        one=await o.assess(ev,{'cpu':2},actions)
+        two=await o.assess(ev,{'cpu':2},actions)
+>       assert one.ticket==two.ticket, 'same event and plan must not create a second approval'
+E       AssertionError: same event and plan must not create a second approval
+E       assert 'e961760d0a5c...c2333219bc69b' == '9a33a73e7554...4aece74397dee'
+E         
+E         - 9a33a73e7554121272f9930b386e15635254aece74397dee
+E         + e961760d0a5ca6b746f583ea68cc3016144c2333219bc69b
+
+python/packages/autogen-core/tests/test_omega_cognitive_ooda.py:157: AssertionError
+______________ test_clock_rollback_does_not_extend_expired_ticket ______________
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-1/test_clock_rollback_does_not_e0')
+
+    def test_clock_rollback_does_not_extend_expired_ticket(tmp_path):
+        clock=[100.]
+        a=ApprovalLedger(tmp_path/'a.sqlite',{'t':frozenset({'admin'})},lifetime_seconds=5,clock=lambda:clock[0])
+        t=a.stage('t','a'*64)
+        clock[0]=108.
+        with pytest.raises(ApprovalDenied):a.approve(t,'t','admin')
+        clock[0]=101.
+>       with pytest.raises(ApprovalDenied):a.approve(t,'t','admin')
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'autogen_core._cognitive_ooda.ApprovalDenied'>
+
+python/packages/autogen-core/tests/test_omega_cognitive_ooda.py:175: Failed
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_cognitive_ooda.py::test_retry_of_same_observation_cannot_mint_second_approval - AssertionError: same event and plan must not create a second approval
+assert 'e961760d0a5c...c2333219bc69b' == '9a33a73e7554...4aece74397dee'
+  
+  - 9a33a73e7554121272f9930b386e15635254aece74397dee
+  + e961760d0a5ca6b746f583ea68cc3016144c2333219bc69b
+FAILED python/packages/autogen-core/tests/test_omega_cognitive_ooda.py::test_clock_rollback_does_not_extend_expired_ticket - Failed: DID NOT RAISE <class 'autogen_core._cognitive_ooda.ApprovalDenied'>
+2 failed, 13 passed in 0.39s

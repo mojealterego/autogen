@@ -119,3 +119,10 @@ Multi-host autonomy and production rollout remain open.
 
 See [dependency-gate](dependency-gate/README.md) for SHA-256 validation of
 user-supplied wheels and updated upstream regression blockers.
+
+## Cognitive OODA 11.0 (bounded local substrate)
+
+See [cognitive-ooda](cognitive-ooda/README.md) for durable lossless episodic
+observations, deterministic world-state simulation, single-use HITL tickets,
+and trusted-action integration with the existing symbolic gate and swarm.
+Neural Titans/R³Mem, real Meta CWM inference and learned LTN are future work.

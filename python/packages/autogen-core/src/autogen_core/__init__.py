@@ -219,3 +219,15 @@ from ._workflow_evolution import (WorkflowEvolutionEngine, EvolutionCandidate, E
 from ._neurosymbolic_gate import SymbolicRule, SymbolicVerdict, SymbolicGate, SymbolicDenied, symbolically_guarded
 
 from ._infrastructure_supervisor import (SupervisorSpec, SupervisorEvent, SupervisorSnapshot, SupervisorDenied, ManagedProcessSupervisor, InfrastructureSupervisor, verify_supervisor_audit)
+
+# Opt-in bounded cognitive OODA substrate. Not a learned Titans/R3Mem/CWM/LTN implementation.
+from ._cognitive_ooda import (
+    CognitiveEvent, EpisodicStore, MemoryConflict, MemoryCorrupt, MemoryReceipt,
+    WorldAction, WorldModel, WorldPolicyDenied, SimulationOutcome,
+    ApprovalLedger, ApprovalDenied, CognitiveOODA, CognitiveDecision, CognitiveDenied,
+)
+__all__.extend([
+    "CognitiveEvent", "EpisodicStore", "MemoryConflict", "MemoryCorrupt", "MemoryReceipt",
+    "WorldAction", "WorldModel", "WorldPolicyDenied", "SimulationOutcome",
+    "ApprovalLedger", "ApprovalDenied", "CognitiveOODA", "CognitiveDecision", "CognitiveDenied",
+])
