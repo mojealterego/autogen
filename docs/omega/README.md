@@ -126,3 +126,11 @@ See [cognitive-ooda](cognitive-ooda/README.md) for durable lossless episodic
 observations, deterministic world-state simulation, single-use HITL tickets,
 and trusted-action integration with the existing symbolic gate and swarm.
 Neural Titans/R³Mem, real Meta CWM inference and learned LTN are future work.
+
+## Bounded defensive specialists 12.0
+
+See [defensive agents](defensive-agents/README.md) for concrete, opt-in Shadow
+Hunter endpoint review, local read-only Chrome CDP target inventory, SQLite
+WAL economic budget and deterministic offline adversarial fixture replay.
+These are local verified controls, not a production EDR, privileged Enforcer,
+live Chrome PID mapper or continuously attacking Red Team service.

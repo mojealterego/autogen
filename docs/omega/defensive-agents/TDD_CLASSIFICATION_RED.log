@@ -1,0 +1,40 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_______ test_redteam_false_accept_vs_false_reject_rates_are_not_inverted _______
+
+    def test_redteam_false_accept_vs_false_reject_rates_are_not_inverted():
+        cases=(
+            DefensiveProbe('missed',observation(),True),
+            DefensiveProbe('false_block',observation(agent='unregistered'),False),
+        )
+        result=DefensiveRedTeamer(hunter()).evaluate(cases)
+        assert result.correct==0
+        assert result.false_accepts==1, 'missed suspicious event is false acceptance'
+        assert result.false_rejects==1, 'benign flagged event is false rejection'
+        missed=DefensiveRedTeamer(hunter()).evaluate((cases[0],))
+        blocked=DefensiveRedTeamer(hunter()).evaluate((cases[1],))
+>       assert (missed.false_accepts,missed.false_rejects)==(1,0)
+E       assert (0, 1) == (1, 0)
+E         
+E         At index 0 diff: 0 != 1
+E         
+E         Full diff:
+E           (
+E         +     0,
+E               1,
+E         -     0,
+E           )
+
+python/packages/autogen-core/tests/test_omega_defensive_agents.py:235: AssertionError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_defensive_agents.py::test_redteam_false_accept_vs_false_reject_rates_are_not_inverted - assert (0, 1) == (1, 0)
+  
+  At index 0 diff: 0 != 1
+  
+  Full diff:
+    (
+  +     0,
+        1,
+  -     0,
+    )
+1 failed in 0.27s

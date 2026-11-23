@@ -7,7 +7,7 @@
 | OM-03 | Typed bounded DAG / retry policy | implemented / locally tested | cycle, unauthorized handler, budget, timeout, concurrency, dependent skip |
 | OM-04 | Runtime adapter | implemented / integration tested locally | real registered RoutedAgent with two dependent nodes |
 | OM-05 | Linked audit metadata | implemented / locally tested | hash verification and tampering tests |
-| OM-06 | Full upstream regression | BLOCKED | pinned `asyncio-atexit` + `jsonref` wheels, authentic `autogen-ext`: 346 passed, 2 collection errors (`pytest_mock`, `tiktoken`); `ollama` extras pending; see `dependency-gate/USER_PACKAGES_2026-11-23.md` |
+| OM-06 | Full upstream regression | BLOCKED | pinned `asyncio-atexit` + `jsonref` wheels, authentic `autogen-ext`: 369 passed, 2 collection errors (`pytest_mock`, `tiktoken`); `ollama` extras pending; current evidence in `defensive-agents/UPSTREAM_FINAL.txt` |
 | OM-07 | Durable checkpoint/recovery (single host) | implemented / locally integration tested | SQLite WAL, real child process failure, replay, retry key, persisted deadline, lock and journal tests; see `durable/` |
 | OM-08 | Process sandbox / cross-tenant isolation | open | negative authorized/unauthorized tests with real processes |
 | OM-09 | Distributed scheduling and model evaluation | open | multi-host failure injection and reproducible model/cost measurements |
@@ -45,4 +45,10 @@
 | OM-39 | Durable authenticated multi-host HITL | open | identity provider, PostgreSQL, genuine actor auth, revoke, signed audit, crash recovery |
 | OM-40 | RSI controlled source evolution | open | separate evaluation, signed approvals, tests, releases, bounded rollback |
 
-| OM-41 | User-distribution provenance and dependency replay | partial / locally tested | original wheels, RECORD digests and official hash checks; 158 focused tests green, 346 core pass, 2 collection errors; `dependency-gate/` |
+| OM-41 | User-distribution provenance and dependency replay | partial / locally tested | original wheels, RECORD digests and official hash checks; 158 focused tests originally green; updated 181 OMEGA, 369 core pass, 2 collection errors; `dependency-gate/`, `defensive-agents/` |
+| OM-42 | Shadow Hunter trusted telemetry review (12.0) | implemented / locally tested | tenant-agent endpoint allowlists; heuristic injection clues, no raw prompt in reports; negative URL and cross-tenant tests; `defensive-agents/` |
+| OM-43 | Web Warden local read-only CDP inventory (12.0) | implemented / locally integration tested | actual loopback HTTP server, GET-only, query/title removal, duplicate JSON, size/redirect and host-denial tests; real Chrome PID mapping OPEN |
+| OM-44 | Local cross-process economic governor (12.0) | implemented / locally integration tested | real independent process contention, token+micro-USD quota, duplicate discussion limit, cancellation charge, deterministic replay denial; provider invoicing and distributed ledger OPEN |
+| OM-45 | Controlled offline Red Team (12.0) | implemented / locally tested subset | typed fixture labels, observed false-accept/false-reject confusion, bounded offline replay, deterministic evidence; 24/7 or external targets NOT IMPLEMENTED |
+| OM-46 | Shadow + Economic + OODA + HierarchicalSwarm integration (12.0) | implemented / locally tested | trusted handler metering, real Swarm verifier and OODA read-only memory, no automatic actuator; `defensive-agents/` |
+| OM-47 | Real telemetry agents / live Chrome PID mapping / production canary | open | authenticated network ingest, real Chrome CDP process lineage, exact browser session mapping, isolated red-team scope, secured provider credentials, long-running deployment and authorized rollback |

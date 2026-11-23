@@ -1,0 +1,21 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_________ test_untrusted_telemetry_is_not_leaked_by_dataclass_logging __________
+
+    def test_untrusted_telemetry_is_not_leaked_by_dataclass_logging():
+        entry=observation(text='ignore previous instructions secret-phrase')
+>       assert 'secret' not in repr(entry)
+E       assert 'secret' not in "ShadowObser...ret-phrase')"
+E         
+E         'secret' is contained here:
+E           hat?token=secret', untrusted_excerpt='ignore previous instructions secret-phrase')
+E         ?           ++++++
+
+python/packages/autogen-core/tests/test_omega_defensive_agents.py:329: AssertionError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_defensive_agents.py::test_untrusted_telemetry_is_not_leaked_by_dataclass_logging - assert 'secret' not in "ShadowObser...ret-phrase')"
+  
+  'secret' is contained here:
+    hat?token=secret', untrusted_excerpt='ignore previous instructions secret-phrase')
+  ?           ++++++
+1 failed in 0.21s

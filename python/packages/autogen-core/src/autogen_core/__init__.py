@@ -231,3 +231,19 @@ __all__.extend([
     "WorldAction", "WorldModel", "WorldPolicyDenied", "SimulationOutcome",
     "ApprovalLedger", "ApprovalDenied", "CognitiveOODA", "CognitiveDecision", "CognitiveDenied",
 ])
+
+# Optional OMEGA 12 local defensive specialists, with bounded typed contracts.
+from ._defensive_agents import (
+    ShadowObservation, ShadowVerdict, ShadowHunter, ShadowDenied,
+    BrowserTarget, ReadOnlyWebWarden, CDPDenied,
+    EconomicPolicy, EconomicReservation, EconomicSnapshot, EconomicOptimizer,
+    EconomicDenied, budgeted_swarm_handler,
+    DefensiveProbe, RedTeamReport, DefensiveRedTeamer, SecurityOODAObserver,
+)
+__all__.extend([
+    'ShadowObservation', 'ShadowVerdict', 'ShadowHunter', 'ShadowDenied',
+    'BrowserTarget', 'ReadOnlyWebWarden', 'CDPDenied',
+    'EconomicPolicy', 'EconomicReservation', 'EconomicSnapshot', 'EconomicOptimizer',
+    'EconomicDenied', 'budgeted_swarm_handler',
+    'DefensiveProbe', 'RedTeamReport', 'DefensiveRedTeamer', 'SecurityOODAObserver',
+])

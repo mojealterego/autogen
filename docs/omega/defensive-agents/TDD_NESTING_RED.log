@@ -1,0 +1,13 @@
+.F                                                                       [100%]
+=================================== FAILURES ===================================
+______________ test_shadow_rejects_invalid_unicode_before_hashing ______________
+
+    def test_shadow_rejects_invalid_unicode_before_hashing():
+>       with pytest.raises(ValueError):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'ValueError'>
+
+python/packages/autogen-core/tests/test_omega_defensive_agents.py:342: Failed
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_defensive_agents.py::test_shadow_rejects_invalid_unicode_before_hashing - Failed: DID NOT RAISE <class 'ValueError'>
+1 failed, 1 passed in 0.72s

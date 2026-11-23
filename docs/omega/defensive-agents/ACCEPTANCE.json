@@ -1,0 +1,67 @@
+{
+  "stage": "OMEGA 12.0 bounded defensive specialists",
+  "status": "IMPLEMENTED_AND_LOCALLY_TESTED",
+  "base_commit": "6f83e5ae7fcaa31ab6e06bd3ad4ddcdad8f74d76",
+  "branch": "main",
+  "environment": {
+    "python": "3.13.5",
+    "system": "Linux",
+    "architecture": "x86_64",
+    "autogen_core": "0.7.5",
+    "test_environment": "isolated PYTHONPATH + user verified wheels (pytest_mock/tiktoken unavailable)"
+  },
+  "checks": {
+    "new_module": {
+      "command": "python -m pytest -q python/packages/autogen-core/tests/test_omega_defensive_agents.py",
+      "passed": 23,
+      "failed": 0,
+      "exit_code": 0,
+      "proof": "STAGE_GREEN.txt"
+    },
+    "focused": {
+      "command": "python -m pytest -vv -x python/packages/autogen-core/omega_tests python/packages/autogen-core/tests/test_omega_*.py",
+      "passed": 181,
+      "failed": 0,
+      "exit_code": 0,
+      "proof": "FOCUSED_FINAL.txt"
+    },
+    "upstream": {
+      "command": "python -m pytest -vv python/packages/autogen-core/tests --continue-on-collection-errors",
+      "passed": 369,
+      "collection_errors": 2,
+      "exit_code": 1,
+      "proof": "UPSTREAM_FINAL.txt",
+      "blockers": [
+        "pytest_mock",
+        "tiktoken"
+      ]
+    },
+    "compile": {
+      "method": "ast.parse Python source",
+      "parsed": 584,
+      "errors": 0,
+      "proof": "AST_COMPILE.json"
+    },
+    "cdp_transport": {
+      "actual_loopback_http": true,
+      "actual_chrome": false,
+      "actual_pid_mapping": false
+    },
+    "economic": {
+      "actual_multiprocess_sqlite": true,
+      "actual_provider_billing": false
+    },
+    "red_team": {
+      "offline_fixture_only": true,
+      "external_targets_scanned": false
+    },
+    "production_deployment": false
+  },
+  "source_sha256": {
+    "python/packages/autogen-core/src/autogen_core/_defensive_agents.py": "b4afd2d2fe3e16539d072b0460c8e7550792623838b07864eb5b0a11d00d8209",
+    "python/packages/autogen-core/src/autogen_core/__init__.py": "4e88138d5a7e88fbebe8dbf9530bfc5bd8bfac71a6956f119082c7aa18ebf2e5",
+    "python/packages/autogen-core/tests/test_omega_defensive_agents.py": "459e4782806d8df043174dea17243f6012ab4d09a580c4ee252b3d627ba80dc1",
+    "docs/omega/defensive-agents/demo.py": "0d9df2b1e676ca3de81ad843106cf01dc48c897dac5b379ed838ee180ff9fc88"
+  },
+  "release_gate": "BLOCKED_FULL_UPSTREAM_DEPENDENCIES_AND_PRODUCTION_E2E"
+}

@@ -1,0 +1,1 @@
+{"browser_pid_established": false, "finding_codes": ["unapproved_endpoint", "suspected_instruction_attack"], "memory_only_no_actuation": true, "red_team_fixture_passed": 2, "red_team_fixture_total": 2, "shadow_alert": true, "spent_tokens": 8}
