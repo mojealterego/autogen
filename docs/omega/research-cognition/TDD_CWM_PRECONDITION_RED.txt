@@ -1,0 +1,36 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______ test_cwm_rejects_empty_or_malformed_initial_state_without_dispatch ______
+
+self = <autogen_core._research_cwm.CWMClient object at 0x7f83d6e64d70>
+initial = {}, goal = 'test'
+
+    async def propose(self,initial:Mapping[str,int],goal:str,*,frozen_keys:frozenset[str]=frozenset())->CWMProposal:
+        if (type(goal) is not str or not 1<=len(goal)<=1024 or '\x00' in goal or
+                not isinstance(initial,Mapping) or not isinstance(frozen_keys,frozenset)):
+            raise CWMRejected('invalid bounded model prompt')
+        try:
+            # This validates preconditions independently from the model provider.
+            check=WorldModel(frozen_keys=frozen_keys)
+>           check.simulate(initial,(WorldAction('read',next(iter(initial))),))
+                                                       ^^^^^^^^^^^^^^^^^^^
+E           StopIteration
+
+python/packages/autogen-core/src/autogen_core/_research_cwm.py:117: StopIteration
+
+The above exception was the direct cause of the following exception:
+
+cwm_server = (<http.server.ThreadingHTTPServer object at 0x7f83d6e641a0>, <class 'test_omega_research14.cwm_server.<locals>.Handler'>)
+
+    @pytest.mark.asyncio
+    async def test_cwm_rejects_empty_or_malformed_initial_state_without_dispatch(cwm_server):
+        server,handler=cwm_server
+        c=CWMClient(f'http://127.0.0.1:{server.server_port}/v1/chat/completions',allow_loopback_http=True)
+>       with pytest.raises(CWMRejected):await c.propose({},'test')
+                                        ^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       RuntimeError: coroutine raised StopIteration
+
+python/packages/autogen-core/tests/test_omega_research14.py:323: RuntimeError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_research14.py::test_cwm_rejects_empty_or_malformed_initial_state_without_dispatch - RuntimeError: coroutine raised StopIteration
+1 failed in 1.93s

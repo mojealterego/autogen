@@ -142,3 +142,10 @@ remote status connector, cryptographically chained journal outcome transitions,
 safe reopening of previously skipped dependent DAG nodes, strict pinned-head
 replay, local/restarted executor and real mTLS integration tests. No remote
 resubmission, replicated authority, external sink or production HA claim.
+
+## Research cognition 14.0 — Titans-style MAL, R³Mem-inspired memory, CWM, LTN, RSI
+
+See [research cognition](research-cognition/README.md) for bounded real
+PyTorch training, local CWM-compatible HTTP transport, finite-state hard proof
+and operator-signed restricted source evolution. Full research architectures
+remain distinct, externally unverified requirements.

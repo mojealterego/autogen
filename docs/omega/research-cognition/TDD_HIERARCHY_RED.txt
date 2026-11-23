@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_omega_research14.py ________________
+ImportError while importing test module '/mnt/data/mz14/autogen-main/python/packages/autogen-core/tests/test_omega_research14.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/tests/test_omega_research14.py:14: in <module>
+    from autogen_core._research_neural import TitansMAL, TenantTitansBank, VirtualTokenCodec, HierarchicalR3Memory, LTNAxiomLearner, HardLTNGate
+E   ImportError: cannot import name 'HierarchicalR3Memory' from 'autogen_core._research_neural' (/mnt/data/mz14/autogen-main/python/packages/autogen-core/src/autogen_core/_research_neural.py)
+=========================== short test summary info ============================
+ERROR python/packages/autogen-core/tests/test_omega_research14.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.75s

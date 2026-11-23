@@ -1,0 +1,20 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+_____ test_rsi_generates_bounded_candidate_search_but_cannot_self_approve ______
+
+tmp_path = PosixPath('/tmp/pytest-of-root/pytest-16/test_rsi_generates_bounded_can0')
+
+    @pytest.mark.asyncio
+    async def test_rsi_generates_bounded_candidate_search_but_cannot_self_approve(tmp_path):
+        key=b'strong-external-signing-key-32-bytes'
+        cases=tuple(EvolutionCase(f'c{i}',{}) for i in range(8))
+        r=RestrictedRSI(tmp_path/'auto.db','tenant',_source(),cases,_evaluate,
+                        EvolutionPolicy(required_gain=0),operator_keys={'op':key})
+>       best=await r.discover({'max_parallel':(2,3)})
+                   ^^^^^^^^^^
+E       AttributeError: 'RestrictedRSI' object has no attribute 'discover'
+
+python/packages/autogen-core/tests/test_omega_research14.py:294: AttributeError
+=========================== short test summary info ============================
+FAILED python/packages/autogen-core/tests/test_omega_research14.py::test_rsi_generates_bounded_candidate_search_but_cannot_self_approve - AttributeError: 'RestrictedRSI' object has no attribute 'discover'
+1 failed in 1.61s

@@ -1,0 +1,84 @@
+{
+  "stage": "OMEGA 14.0 bounded research intelligence",
+  "baseline_commit": "cb74dd201498db6d75e14812c50da15822eea8b8",
+  "branch": "main",
+  "environment": {
+    "os": "Linux",
+    "cpu_arch": "x86_64",
+    "python": "3.13.5",
+    "torch": "2.10.0+cpu",
+    "autogen_core": "0.7.5",
+    "test_dependencies": "user-provided original wheels and isolated PYTHONPATH"
+  },
+  "status": "IMPLEMENTED_TESTED_LOCALLY_FULL_PRODUCTION_GATE_BLOCKED",
+  "tests": {
+    "stage": {
+      "passed": 26,
+      "failed": 0,
+      "exit_code": 0,
+      "proof": "STAGE_GREEN.txt"
+    },
+    "focused": {
+      "passed": 225,
+      "failed": 0,
+      "exit_code": 0,
+      "proof": "FOCUSED_FINAL.txt"
+    },
+    "upstream": {
+      "passed": 413,
+      "collection_errors": 2,
+      "exit_code": 1,
+      "proof": "UPSTREAM_FINAL.txt",
+      "blockers": [
+        "pytest_mock",
+        "tiktoken"
+      ]
+    },
+    "syntax": {
+      "checked": 592,
+      "errors": 0,
+      "proof": "COMPILE.json"
+    }
+  },
+  "research_truth": {
+    "mal_torch_loss_gradients": true,
+    "full_google_titans": false,
+    "r3_learned_encoder_decoder": true,
+    "r3_heldout_lossless_guarantee": false,
+    "meta_cwm_http_wire_test": true,
+    "actual_meta_32b_inference": false,
+    "ltn_differentiable_predicate": true,
+    "native_ltn_torch_installed": false,
+    "bounded_exhaustive_invariant_proof": true,
+    "unbounded_smt_proof": false,
+    "restricted_signed_python_source_mutation": true,
+    "autonomous_unreviewed_source_deployment": false,
+    "full_production_deployment": false
+  },
+  "measured_local_demo": {
+    "bounded_proof_detects_counterexample": true,
+    "ltn_satisfaction_after": 0.96679,
+    "ltn_satisfaction_before": 0.50487,
+    "ltngate_authorized_accepted": true,
+    "mal_error_after": 1.49e-05,
+    "mal_error_before": 0.2133334,
+    "mal_pinned_checkpoint": true,
+    "mal_true_gradient_surprise": 0.0045506,
+    "meta_cwm_32b_weights_executed": false,
+    "privileged_operations_executed": false,
+    "r3_decoder_measured_exact_fraction": 1.0,
+    "r3_raw_episodic_backing_required_for_lossless": true,
+    "rsi_selected_parallelism": 3,
+    "rsi_signed_audit_verified": true,
+    "rsi_source_revision": 1
+  },
+  "source_sha256": {
+    "python/packages/autogen-core/src/autogen_core/_research_neural.py": "67c04cb709995dffe313cacb2cf360d97c5f77726930ba279929ed6192b2757c",
+    "python/packages/autogen-core/src/autogen_core/_research_cwm.py": "b8c40d82a9835a0711c6d3368d31ae5329b14988c5ba6f0ab387e9fd783ee340",
+    "python/packages/autogen-core/src/autogen_core/_research_rsi.py": "ee7d1db4bdce83b943305f6ef1234425d109d3432980cf29051c93e8b20b3e34",
+    "python/packages/autogen-core/src/autogen_core/research/__init__.py": "bd6825b79966f5827e89ef53a17dcd94a9399839ef1698969e9ee40675b4c15a",
+    "python/packages/autogen-core/tests/test_omega_research14.py": "43b5260589017dd77bdd2d2eb1efe037b477ca81ab4f1c1884e0755a0e26ef6c",
+    "docs/omega/research-cognition/demo.py": "c9436d51f9305ac02095ae0e6d1a3073936b15eb54bdf8a90adb81debf537080"
+  },
+  "release_gate": "BLOCKED_FULL_UPSTREAM_DEPENDENCIES_AND_REAL_RESEARCH_MODELS"
+}

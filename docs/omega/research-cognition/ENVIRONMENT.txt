@@ -1,0 +1,11 @@
+OMEGA 14 local test environment
+Date: 2026-11-23
+OS: Linux x86_64
+Python: 3.13.5
+PyTorch: 2.10.0+cpu
+NumPy: 2.3.5
+Pytest: 9.0.2
+AutoGen Core source: 0.7.5 (project copy)
+Baseline git main: cb74dd201498db6d75e14812c50da15822eea8b8
+Optional research components are not part of upstream AutoGen 0.7.5 dependency lock.
+No real Meta CWM 32B weights, real hosted provider token, real E2B sandbox, LTNtorch wheel, external SIEM or production tenant auth in this environment.
