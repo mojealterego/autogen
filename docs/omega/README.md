@@ -114,3 +114,8 @@ AST interpreter, deterministic redacted evidence, and guarded agent handlers.
 See [infrastructure](infrastructure/README.md) for bounded process supervision,
 health checks, restart recovery, process-tree cleanup and redacted audit.
 Multi-host autonomy and production rollout remain open.
+
+## Offline dependency verification — OMEGA 10.0 maintenance
+
+See [dependency-gate](dependency-gate/README.md) for SHA-256 validation of
+user-supplied wheels and updated upstream regression blockers.

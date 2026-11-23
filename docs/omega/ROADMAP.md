@@ -7,7 +7,7 @@
 | OM-03 | Typed bounded DAG / retry policy | implemented / locally tested | cycle, unauthorized handler, budget, timeout, concurrency, dependent skip |
 | OM-04 | Runtime adapter | implemented / integration tested locally | real registered RoutedAgent with two dependent nodes |
 | OM-05 | Linked audit metadata | implemented / locally tested | hash verification and tampering tests |
-| OM-06 | Full upstream regression | blocked | missing development dependencies and intermittent process/timing failure in 5.1 full suite; see `fabric/` evidence |
+| OM-06 | Full upstream regression | BLOCKED | with pinned user `jsonref` and tagged `asyncio_atexit` source: 329 passed, 2 collection errors (`pytest_mock`, optional `autogen_ext` extras); see `dependency-gate/` |
 | OM-07 | Durable checkpoint/recovery (single host) | implemented / locally integration tested | SQLite WAL, real child process failure, replay, retry key, persisted deadline, lock and journal tests; see `durable/` |
 | OM-08 | Process sandbox / cross-tenant isolation | open | negative authorized/unauthorized tests with real processes |
 | OM-09 | Distributed scheduling and model evaluation | open | multi-host failure injection and reproducible model/cost measurements |
@@ -36,3 +36,4 @@
 | OM-30 | Bounded typed AST runtime policy proof gate (9.0) | implemented / locally integration tested | injection denial, typed validation, bounded execution, redacted evidence hash and guarded swarm invocation; `neurosymbolic/` |
 | OM-31 | Local autonomous process service supervisor (10.0) | implemented / locally integration tested | real child processes, bounded restarts, health checks, secret allowlist, process-group cleanup, audit; `infrastructure/` |
 | OM-32 | Four-stage OMEGA 7.0–10.0 local acceptance | partial — focused test gate PASS, upstream gate BLOCKED | `swarm/`, `evolution/`, `neurosymbolic/`, `infrastructure/`; 141 focused tests, 247 core tests, 10 dependency collection errors |
+| OM-33 | Offline dependency integrity and replay gate | implemented / locally tested | 5 verified wheel-auditor tests, SHA-256 against pinned uv.lock, new full-core evidence, remaining blockers documented; `dependency-gate/` |
