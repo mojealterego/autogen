@@ -1,0 +1,16 @@
+
+==================================== ERRORS ====================================
+_______________ ERROR collecting tests/test_omega_upstream15.py ________________
+ImportError while importing test module '/mnt/data/mz15/autogen-main/python/packages/autogen-core/tests/test_omega_upstream15.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+mnt/data/mz15/autogen-main/python/packages/autogen-core/tests/test_omega_upstream15.py:16: in <module>
+    from autogen_core._research_upstream import LTNtorchBridge, LTNtorchRejected
+E   ModuleNotFoundError: No module named 'autogen_core._research_upstream'
+=========================== short test summary info ============================
+ERROR mnt/data/mz15/autogen-main/python/packages/autogen-core/tests/test_omega_upstream15.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 1.37s

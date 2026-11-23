@@ -281,7 +281,7 @@ def _economic_process(path: str, ready, gate, out, index: int) -> None:
         policy=EconomicPolicy(100,4,4,1000,1)
         ledger=EconomicOptimizer(path,{'tenant':policy})
         ready.put(index)
-        gate.wait(timeout=4)
+        gate.wait(timeout=20)
         ledger.reserve('tenant',f'process{index}',65,hashlib.sha256(str(index).encode()).hexdigest())
         out.put(True)
     except EconomicDenied:
@@ -296,16 +296,31 @@ def test_economy_uses_real_processes_and_single_db_authority(tmp_path):
     path=str(tmp_path/'multiprocess.db')
     gate=ctx.Event(); ready=ctx.Queue(); outcomes=ctx.Queue()
     procs=[ctx.Process(target=_economic_process,args=(path,ready,gate,outcomes,i)) for i in range(2)]
-    for p in procs:p.start()
-    assert {ready.get(timeout=6) for _ in procs}=={0,1}
-    gate.set()
-    answers=[outcomes.get(timeout=6) for _ in procs]
-    for p in procs:
-        p.join(timeout=6)
-        if p.is_alive():p.terminate();p.join(timeout=2)
-        assert p.exitcode==0
-    assert sorted(answers)==[False,True]
-    assert EconomicOptimizer(path,{'tenant':EconomicPolicy(100,4,4,1000,1)}).snapshot('tenant').reserved_tokens==65
+    try:
+        for p in procs:p.start()
+        # Spawned interpreters may spend several seconds loading imported
+        # optional research libraries under system contention. Await a real
+        # handshake from both, rather than assuming process initialization
+        # always completes in six seconds.
+        assert {ready.get(timeout=20) for _ in procs}=={0,1}
+        gate.set()
+        answers=[outcomes.get(timeout=20) for _ in procs]
+        for p in procs:
+            p.join(timeout=20)
+            assert p.exitcode==0, 'economic child did not terminate cleanly'
+        assert sorted(answers)==[False,True]
+        assert EconomicOptimizer(path,{'tenant':EconomicPolicy(100,4,4,1000,1)}).snapshot('tenant').reserved_tokens==65
+    finally:
+        gate.set()
+        for p in procs:
+            if p.is_alive():
+                p.terminate()
+                p.join(timeout=3)
+                if p.is_alive():
+                    p.kill()
+                    p.join(timeout=3)
+        ready.close()
+        outcomes.close()
 
 
 def test_real_standalone_demo_no_models_no_network_access():

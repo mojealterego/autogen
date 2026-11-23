@@ -18,3 +18,13 @@ __all__ = [
     'CWMClient','CWMRejected','CWMProposal',
     'RestrictedRSI','RSIDenied','RSIProposal','canonical_policy_source',
 ]
+
+# OMEGA 15: real, optionally installed LTNtorch 1.0.2 API. Importing this
+# package does not install, download, or silently vendor external sources.
+from .._research_upstream import LTNtorchBridge, LTNtorchRejected, LTNtorchReport, LTNtorchDecision
+from .._cwm_trace import CWMTraceParser, CWMTraceRejected, CWMFrame, CWMTrace, CWMTraceMatch, compare_cwm_trace
+__all__.extend([
+    'LTNtorchBridge', 'LTNtorchRejected', 'LTNtorchReport', 'LTNtorchDecision',
+    'CWMTraceParser', 'CWMTraceRejected', 'CWMFrame', 'CWMTrace', 'CWMTraceMatch',
+    'compare_cwm_trace',
+])

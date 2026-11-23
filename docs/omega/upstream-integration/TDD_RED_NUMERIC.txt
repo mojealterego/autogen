@@ -1,0 +1,15 @@
+.....F                                                                   [100%]
+=================================== FAILURES ===================================
+______________ test_cwm_trace_rejects_nonfinite_numeric_overflow _______________
+
+    def test_cwm_trace_rejects_nonfinite_numeric_overflow():
+        parser=CWMTraceParser()
+        raw='<|frame_sep|><|call_sep|>{"counter":1e999}<|action_sep|>def f():<|frame_sep|>'
+>       with pytest.raises(CWMTraceRejected):parser.parse(raw)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE <class 'autogen_core._cwm_trace.CWMTraceRejected'>
+
+mnt/data/mz15/autogen-main/python/packages/autogen-core/tests/test_omega_cwm15.py:108: Failed
+=========================== short test summary info ============================
+FAILED mnt/data/mz15/autogen-main/python/packages/autogen-core/tests/test_omega_cwm15.py::test_cwm_trace_rejects_nonfinite_numeric_overflow - Failed: DID NOT RAISE <class 'autogen_core._cwm_trace.CWMTraceRejected'>
+1 failed, 5 passed in 1.20s

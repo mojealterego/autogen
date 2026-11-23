@@ -1,0 +1,102 @@
+{
+  "base_archive_sha256": "f5dcc581b8ebb19ee92f5c7ffb27c5d9b1f297e586df17657cbf5ac8b645200d",
+  "base_commit": "423086e2c029ef0d2e16dae343baacada834473d",
+  "branch": "main",
+  "environment": {
+    "cwm": "source archive static AST + real local HTTP; NO MODEL WEIGHTS",
+    "ltn": "source archive 1.0.2 via PYTHONPATH (NOT vendored)",
+    "machine": "x86_64",
+    "python": "3.13.5",
+    "system": "Linux"
+  },
+  "release": "Magnetic Zero OMEGA 15.0 / upstream LTNtorch + Meta CWM protocol",
+  "release_gate": "BLOCKED_UPSTREAM_DEPENDENCIES_AND_MODEL_WEIGHTS",
+  "security": {
+    "CWM_32B_inference_tested": false,
+    "CWM_32B_weights_downloaded": false,
+    "CWM_fastgen_route_local_wire_tested": true,
+    "CWM_generated_python_executed": false,
+    "LTN_is_formal_proof": false,
+    "LTNtorch_original_library_used": true,
+    "hard_symbolic_gate_enforced": true,
+    "origin_signatures_verified": false,
+    "original_Meta_source_static_contract_tested": true,
+    "production_deployed": false,
+    "reproducible_genuine_model_benchmark": false,
+    "source_archives_vendored": false,
+    "source_sha256_verified": true
+  },
+  "source_integrity": {
+    "cwm": {
+      "archive": "cwm-main (1).zip",
+      "files": 194,
+      "sha256": "d95d661f47778634d78b8c81db6433032e0c636717ba826a085806d38eaef1d0",
+      "status": "verified",
+      "unpacked_bytes": 868714,
+      "weights_present": false
+    },
+    "ltn": {
+      "archive": "LTNtorch-main.zip",
+      "files": 138,
+      "sha256": "3815e922edc57c201e4c031311e58cb758745ea2884708d7232588e1fa4b45dc",
+      "status": "verified",
+      "unpacked_bytes": 73870447,
+      "weights_present": false
+    }
+  },
+  "source_sha256": {
+    "docs/omega/upstream-integration/SOURCE_PROVENANCE.json": "fc8343723219b859eb9beaa4aae8092888cd1b3995f60a1d3e63311c06bc92f8",
+    "docs/omega/upstream-integration/audit_sources.py": "3027d4ca5146c9d62b18d816fd05052349123234611b14e174206f672e2a174f",
+    "python/packages/autogen-core/src/autogen_core/_cwm_trace.py": "3e45c93ad6101b3e81707d145f340ac6955d00734bce328103361446a6252361",
+    "python/packages/autogen-core/src/autogen_core/_research_cwm.py": "3c9072244468fe094305efd93dcbfdc7f62a01e0ac72397caba254ec073784ae",
+    "python/packages/autogen-core/src/autogen_core/_research_upstream.py": "ef68e004cadef05d8c20059404ddd086737270f43ec7f576bc6554584d5b6728",
+    "python/packages/autogen-core/src/autogen_core/research/__init__.py": "eb3007cdc06df8e9c662bd198628e6b320e2416a0453c0b0dc26aafd336253f2",
+    "python/packages/autogen-core/tests/test_omega_cwm15.py": "56179506a2f86feb738c348b0b1e92515a24f6a67b099385864cc1e571804108",
+    "python/packages/autogen-core/tests/test_omega_defensive_agents.py": "68f202e104e32fc48be687ba14837b2f6ec9a56c2059d9c3ea91aaef65fbe586",
+    "python/packages/autogen-core/tests/test_omega_ltn15.py": "73ea886422a5ef9d0875088401358c5ae580281fe2da65ad30a9780c7ad90ec8",
+    "python/packages/autogen-core/tests/test_omega_source_audit15.py": "775d61eab5cd1ef5a3b1a76b1d14e9adda8f01b61318852b624fb786af0d3a6d"
+  },
+  "tests": {
+    "ast": {
+      "errors": 0,
+      "evidence": "AST_COMPILE.json",
+      "files": 598
+    },
+    "focused": {
+      "evidence": "FOCUSED_FINAL.txt",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 240
+    },
+    "new_stage": {
+      "evidence": "STAGE_GREEN.txt",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 15
+    },
+    "no_ltn_optional": {
+      "evidence": "NO_LTN_OPTIONAL.txt",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 12
+    },
+    "process_economy_recheck": {
+      "evidence": "PROCESS_RECHECK.txt",
+      "exit_code": 0,
+      "passed": 1
+    },
+    "tdd_red_initial": "TDD_RED_INITIAL.txt",
+    "tdd_red_numeric": "TDD_RED_NUMERIC.txt",
+    "upstream": {
+      "blockers": [
+        "pytest_mock",
+        "tiktoken"
+      ],
+      "collection_errors": 2,
+      "evidence": "UPSTREAM_FINAL.txt",
+      "exit_code": 1,
+      "failed": 0,
+      "passed": 428
+    }
+  }
+}

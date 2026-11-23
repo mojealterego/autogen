@@ -149,3 +149,11 @@ See [research cognition](research-cognition/README.md) for bounded real
 PyTorch training, local CWM-compatible HTTP transport, finite-state hard proof
 and operator-signed restricted source evolution. Full research architectures
 remain distinct, externally unverified requirements.
+
+## Upstream research integration 15.0
+
+See [upstream integration](upstream-integration/README.md) for real LTNtorch
+quantifier training on the user-supplied upstream source, strict Meta Fastgen
+`/chat/completions` protocol compatibility and read-only CWM trace parsing.
+Source artifacts are SHA-256 pinned and never bundled as models; CWM 32B
+weights and full R³Mem/Titans implementations are NOT included.

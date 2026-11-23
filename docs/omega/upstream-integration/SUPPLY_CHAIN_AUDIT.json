@@ -1,0 +1,18 @@
+{
+  "cwm": {
+    "archive": "cwm-main (1).zip",
+    "files": 194,
+    "sha256": "d95d661f47778634d78b8c81db6433032e0c636717ba826a085806d38eaef1d0",
+    "status": "verified",
+    "unpacked_bytes": 868714,
+    "weights_present": false
+  },
+  "ltn": {
+    "archive": "LTNtorch-main.zip",
+    "files": 138,
+    "sha256": "3815e922edc57c201e4c031311e58cb758745ea2884708d7232588e1fa4b45dc",
+    "status": "verified",
+    "unpacked_bytes": 73870447,
+    "weights_present": false
+  }
+}

@@ -55,7 +55,7 @@ class CWMClient:
         if type(endpoint) is not str or len(endpoint)>2048 or type(model) is not str or not 1<=len(model)<=128:
             raise ValueError('invalid fixed model transport')
         u=urlsplit(endpoint)
-        if (u.username is not None or u.password is not None or u.fragment or u.query or u.path!='/v1/chat/completions'
+        if (u.username is not None or u.password is not None or u.fragment or u.query or u.path not in ('/v1/chat/completions','/chat/completions')
                 or u.scheme not in ('https','http') or not u.hostname or
                 type(allow_loopback_http) is not bool):
             raise ValueError('unsupported model endpoint')
@@ -83,7 +83,7 @@ class CWMClient:
             or auth_env is not None and (not isinstance(auth_env,str) or not re.fullmatch('[A-Z][A-Z0-9_]{1,63}',auth_env))):
             raise ValueError('invalid model connection budgets')
         self.host,self.port,self.secure,self.model,self.auth_env=host,port or (443 if u.scheme=='https' else 80),u.scheme=='https',model,auth_env
-        self.timeout=float(timeout);self.max_bytes=max_response_bytes
+        self.timeout=float(timeout);self.max_bytes=max_response_bytes;self.route=u.path
 
     def _invoke(self,body:bytes)->bytes:
         conn=(http.client.HTTPSConnection(self.host,self.port,timeout=self.timeout,context=ssl.create_default_context())
@@ -94,7 +94,7 @@ class CWMClient:
             if not secret or len(secret)>8192:raise CWMRejected('provider credential unavailable')
             headers['Authorization']='Bearer '+secret
         try:
-            conn.request('POST','/v1/chat/completions',body,headers)
+            conn.request('POST',self.route,body,headers)
             response=conn.getresponse()
             if response.status!=200:raise CWMRejected('model service rejected request')
             length=response.getheader('Content-Length')
@@ -115,10 +115,16 @@ class CWMClient:
             # This validates preconditions independently from the model provider.
             check=WorldModel(frozen_keys=frozen_keys)
             check.simulate(initial,(WorldAction('read',next(iter(initial))),))
-            body=_canonical({'model':self.model,'temperature':0,'max_tokens':1024,
-                'response_format':{'type':'json_object'},'messages':[
+            request={'model':self.model,'temperature':0,'max_tokens':1024,'messages':[
                     {'role':'system','content':'Return ONLY JSON {"actions":[{"operation":"read|set|increment","target":"existing_key","value":integer_or_null}]}. Never return code, tools or untrusted permissions. Maximum 32 actions.'},
-                    {'role':'user','content':json.dumps({'initial':dict(initial),'goal':goal},sort_keys=True)}]})
+                    {'role':'user','content':json.dumps({'initial':dict(initial),'goal':goal},sort_keys=True)}]}
+            if self.route=='/chat/completions':
+                # Meta reference Fastgen exposes /chat/completions, model 'cwm',
+                # and supports its own explicit reasoning config.
+                request['reasoning']={'enabled':False}
+            else:
+                request['response_format']={'type':'json_object'}
+            body=_canonical(request)
             if len(body)>8192:raise CWMRejected('request budget exceeded')
             response=await asyncio.wait_for(asyncio.to_thread(self._invoke,body),timeout=self.timeout+1)
             outer=json.loads(response,object_pairs_hook=_unique,

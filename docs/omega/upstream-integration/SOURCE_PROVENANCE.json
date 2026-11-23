@@ -1,0 +1,74 @@
+{
+  "acl_anthology": {
+    "note": "ACL Anthology publication hosting source, not R3Mem model implementation",
+    "sha256": "0da3ac01406d8a7b814ae868ea642b48599778396cc9a3dd892f99156939156f",
+    "source": "acl-anthology-master.zip"
+  },
+  "browser_snapshots": {
+    "CodeGen Computational World Model access request form - Meta AI.mht": {
+      "bytes": 883546,
+      "format": "MHTML browser snapshot (no model weights)",
+      "sha256": "ec33abdaebe219c194ce416ca1adf15a60e84472241072312351dad632db3fd3"
+    },
+    "Titans_ Learning to Memorize at Test Time Peilin... - Google Scholar.mht": {
+      "bytes": 216567,
+      "format": "MHTML browser snapshot (no model weights)",
+      "sha256": "12228018d32b6f651b0fe0d88a18f00c64339fb265d5bf2d570f72282d98d7a6"
+    },
+    "facebook_cwm · Hugging Face.mht": {
+      "bytes": 1318012,
+      "format": "MHTML browser snapshot (no model weights)",
+      "sha256": "72294c531391f2403711204ea7f0800481586c454a1bcf7cb9278af48c0a38d0"
+    },
+    "facebook_cwm-pretrain · Hugging Face.mht": {
+      "bytes": 1290694,
+      "format": "MHTML browser snapshot (no model weights)",
+      "sha256": "1e88283d910d7c98cb494ef9bfa21e527ddf301db7442d8ca8016e62c07fa2f9"
+    },
+    "facebook_cwm-sft · Hugging Face.mht": {
+      "bytes": 1290171,
+      "format": "MHTML browser snapshot (no model weights)",
+      "sha256": "4caf871ecf8573755e1667d8a8c5f4cc856a6a9307808f3a2b73128be21729ae"
+    }
+  },
+  "cwm": {
+    "code_license": "BSD-3-Clause",
+    "max_member_size": 1000000,
+    "max_members": 512,
+    "max_unpacked_bytes": 12000000,
+    "required": [
+      "cwm-main/LICENSE",
+      "cwm-main/README.md",
+      "cwm-main/serve/README.md",
+      "cwm-main/serve/openai_api.py",
+      "cwm-main/serve/fgserve.py"
+    ],
+    "sha256": "d95d661f47778634d78b8c81db6433032e0c636717ba826a085806d38eaef1d0",
+    "source": "cwm-main (1).zip",
+    "upstream": "https://github.com/facebookresearch/cwm",
+    "weights_license": "FAIR noncommercial research license — separate access required"
+  },
+  "ltn": {
+    "license": "MIT",
+    "max_member_size": 60000000,
+    "max_members": 256,
+    "max_unpacked_bytes": 170000000,
+    "required": [
+      "LTNtorch-main/LICENSE",
+      "LTNtorch-main/setup.py",
+      "LTNtorch-main/ltn/__init__.py",
+      "LTNtorch-main/ltn/core.py",
+      "LTNtorch-main/ltn/fuzzy_ops.py"
+    ],
+    "sha256": "3815e922edc57c201e4c031311e58cb758745ea2884708d7232588e1fa4b45dc",
+    "source": "LTNtorch-main.zip",
+    "upstream": "https://github.com/logictensornetworks/LTNtorch",
+    "version": "1.0.2 (declared in uploaded setup.py)"
+  },
+  "paper": {
+    "pages": 58,
+    "sha256": "2ae224342fd03066046f82416c6d56e2041f658fdd0362f2fb01848d887ed583",
+    "source": "2510.02387v1.pdf",
+    "title": "CWM: An Open-Weights LLM for Research on Code Generation with World Models"
+  }
+}

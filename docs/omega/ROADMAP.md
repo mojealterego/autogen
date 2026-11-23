@@ -40,8 +40,8 @@
 | OM-34 | Bounded OODA substrate (11.0) | implemented / locally integration tested | 17 new tests, 158 focused OMEGA pass; memory, deterministic world, ticket idempotency, HITL, actor integration; `cognitive-ooda/` |
 | OM-35 | Learned Titans MAL and real model surprise gradients | partial — 14.0 test-time linear MAL-style layer locally trained | actual gradient surprise, momentum, tenant checkpoints; full Titans transformer/long-context benchmarks OPEN; `research-cognition/` |
 | OM-36 | R³Mem virtual-token reversible context compression | partial — 14.0 learned virtual-token bottleneck | actual encoder/decoder training, UTF-8 hierarchical memory, measured reconstruction; full R³Mem LLM integration and verified reversibility OPEN; `research-cognition/` |
-| OM-37 | Real CWM + isolated trajectory sandbox | partial — 14.0 real HTTP adapter + bounded world actions | actual loopback protocol tested; Meta 32B model and isolated generated-code execution NOT TESTED; `research-cognition/` |
-| OM-38 | LTN learned constraints + hard formal verifier | partial — 14.0 differentiable fuzzy predicate + finite proof | PyTorch fitting and bounded exhaustive symbolic checking verified; full LTNtorch / SMT proofs OPEN; `research-cognition/` |
+| OM-37 | Real CWM + isolated trajectory sandbox | partial — 15.0 Meta Fastgen HTTP route and bounded read-only traces | original Meta server source AST protocol cross-check, real loopback HTTP; original 32B model and isolated generated-code execution NOT TESTED; `research-cognition/` |
+| OM-38 | LTN learned constraints + hard formal verifier | partial — 15.0 real LTNtorch 1.0.2 learned FOL satisfaction and hard veto | original LTNtorch quantifiers and SatAgg tested from supplied source, no SMT/unbounded proof claim; `research-cognition/` |
 | OM-39 | Durable authenticated multi-host HITL | open | identity provider, PostgreSQL, genuine actor auth, revoke, signed audit, crash recovery |
 | OM-40 | RSI controlled source evolution | partial — 14.0 restricted canonical Python source mutation | measured candidate acceptance, external HMAC authorization, SQLite CAS, signed audit, rollback; arbitrary code/CI deployment OPEN; `research-cognition/` |
 
@@ -56,3 +56,7 @@
 | OM-48 | Reconciliation 13.0 local integration acceptance | partial — focused PASS, upstream BLOCKED | 199/199 focused, 387 core pass + 2 dependency collection errors; external HA / sink E2E not done; `remote-reconcile/` |
 
 | OM-49 | Five-direction research integration 14.0 | local subset under verification; production BLOCKED | bounded PyTorch MAL/R3, CWM HTTP fixture, soft LTN + hard finite proof, gated RSI source mutation; `research-cognition/` |
+
+| OM-49 | Upstream LTNtorch 1.0.2 (15.0) | implemented / locally integrated with exact user source | real `ltn.Variable`, `Predicate`, `Connective`, `Quantifier` and `SatAgg`, learned FOL satisfaction and hard symbolic veto; no SMT completeness; `upstream-integration/` |
+| OM-50 | Original Meta CWM Fastgen compatibility (15.0) | partial / local protocol tested | Meta `/chat/completions` route, `reasoning.enabled=false`, original server source AST comparison, read-only bounded trace parser and independent comparison; actual CWM 32B inference BLOCKED (no weights) |
+| OM-51 | Pinned third-party source provenance (15.0) | implemented / locally tested | original uploaded LTNtorch and CWM archives pass SHA-256, ZIP CRC and anti-traversal/expansion checks; 6 negative/success tests; model weights absent |
