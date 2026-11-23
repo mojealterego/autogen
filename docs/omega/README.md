@@ -134,3 +134,11 @@ Hunter endpoint review, local read-only Chrome CDP target inventory, SQLite
 WAL economic budget and deterministic offline adversarial fixture replay.
 These are local verified controls, not a production EDR, privileged Enforcer,
 live Chrome PID mapper or continuously attacking Red Team service.
+
+## Late remote DAG reconciliation 13.0
+
+See [remote reconciliation](remote-reconcile/README.md) for a read-only
+remote status connector, cryptographically chained journal outcome transitions,
+safe reopening of previously skipped dependent DAG nodes, strict pinned-head
+replay, local/restarted executor and real mTLS integration tests. No remote
+resubmission, replicated authority, external sink or production HA claim.

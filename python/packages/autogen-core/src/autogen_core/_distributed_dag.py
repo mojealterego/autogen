@@ -13,7 +13,10 @@ from typing import Any, Protocol
 
 from ._cluster_coordinator import ClusterDenied, JobSnapshot
 from ._cluster_fabric import FabricTransportError
-from ._durable_workflow import OutcomeUnknownError, current_attempt
+from ._durable_workflow import (
+    AttemptContext, CheckpointIntegrityError, OutcomeUnknownError,
+    RemoteReconciliation, current_attempt,
+)
 from ._governed_workflow import _canonical
 from ._resource_scheduler import Resources
 
@@ -27,6 +30,49 @@ class ProducerBackend(Protocol):
 
 class RemoteStepFailed(RuntimeError):
     """A remote job reached a definite failed state."""
+
+
+def _remote_id(ctx: AttemptContext, remote_handler: str) -> str:
+    return 'dag-' + hashlib.sha256(
+        _canonical(['dag-cluster-v1', ctx.idempotency_key, remote_handler])
+    ).hexdigest()[:48]
+
+
+def distributed_step_reconciler(
+    backend: ProducerBackend, tenant: str, remote_handler: str,
+) -> Callable[[AttemptContext], Awaitable[RemoteReconciliation | None]]:
+    """Bind a trusted, **read-only** remote terminal outcome reader.
+
+    No `submit`, retries, or worker actions are performed during reconciliation.
+    Only the authenticated, matching tenant/job record is accepted. Unavailable
+    or nonterminal remote states preserve uncertainty rather than invent a result.
+    """
+    if (type(tenant) is not str or not 0 < len(tenant) <= 128 or
+            type(remote_handler) is not str or not 0 < len(remote_handler) <= 128 or
+            not callable(getattr(backend, 'get', None))):
+        raise ValueError('invalid remote reconciliation binding')
+
+    async def read(ctx: AttemptContext) -> RemoteReconciliation | None:
+        if not isinstance(ctx, AttemptContext) or ctx.tenant_id != tenant:
+            raise CheckpointIntegrityError('remote reader tenant mismatch')
+        job_id = _remote_id(ctx, remote_handler)
+        try:
+            state = await asyncio.to_thread(backend.get, tenant, job_id)
+        except (FabricTransportError, ClusterDenied):
+            return None
+        if (not isinstance(state, JobSnapshot) or state.tenant != tenant
+                or state.job_id != job_id):
+            raise CheckpointIntegrityError('remote status not bound to requested job')
+        if state.state in ('queued', 'leased', 'uncertain'):
+            return None
+        if state.state not in ('succeeded', 'failed'):
+            raise CheckpointIntegrityError('invalid remote terminal state')
+        if state.state == 'failed' and state.result is not None:
+            raise CheckpointIntegrityError('failed remote job returned unexpected data')
+        return RemoteReconciliation(tenant, ctx.idempotency_key,
+                                    state.state, state.result if state.state == 'succeeded' else None)
+
+    return read
 
 
 def distributed_step_handler(backend: ProducerBackend, tenant: str, remote_handler: str, demand: Resources,
@@ -56,7 +102,7 @@ def distributed_step_handler(backend: ProducerBackend, tenant: str, remote_handl
         if ctx.tenant_id != tenant:
             raise ClusterDenied('workflow tenant differs from fixed producer identity')
         # Replays of a durable intent use the same remote ID; no attempt number.
-        job_id = 'dag-' + hashlib.sha256(_canonical(['dag-cluster-v1', ctx.idempotency_key, remote_handler])).hexdigest()[:48]
+        job_id = _remote_id(ctx, remote_handler)
         try:
             await asyncio.to_thread(backend.submit, tenant, job_id, remote_handler, inputs, demand,
                                     idempotent=idempotent, max_attempts=max_attempts)

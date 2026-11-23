@@ -44,6 +44,7 @@ from ._durable_workflow import (
     DurableWorkflowResult,
     RunBusyError,
     OutcomeUnknownError,
+    RemoteReconciliation,
     current_attempt,
 )
 from ._governed_workflow import (
@@ -113,7 +114,7 @@ from ._cluster_fabric import FabricClient, FabricPrincipal, FabricServer, Fabric
 from ._authority_failover import AuthorityBusy, AuthorityGuard, AuthorityLeaseStore, LeadershipLease, LeadershipLost
 from ._openai_chat_provider import OpenAIChatProvider
 from ._adaptive_model_router import (AdaptiveModelRouter, ModelProfile, ModelResponse, RouteRequest, TenantRoutePolicy, RouteResult, RouterSnapshot, TenantUsage, ModelHealth, ModelAdmissionDenied, ModelOutcomeUnknown, RetryableModelError, NoModelAvailable)
-from ._distributed_dag import distributed_step_handler, ProducerBackend, RemoteStepFailed
+from ._distributed_dag import distributed_step_handler, distributed_step_reconciler, ProducerBackend, RemoteStepFailed
 from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
@@ -126,7 +127,7 @@ __all__ = [
     "RouteResult", "RouterSnapshot", "TenantUsage", "ModelHealth", "ModelAdmissionDenied",
     "ModelOutcomeUnknown", "RetryableModelError", "NoModelAvailable",
     "AuthorityBusy", "AuthorityGuard", "AuthorityLeaseStore", "LeadershipLease", "LeadershipLost",
-    "distributed_step_handler", "ProducerBackend", "RemoteStepFailed", "OutcomeUnknownError",
+    "distributed_step_handler", "distributed_step_reconciler", "ProducerBackend", "RemoteStepFailed", "OutcomeUnknownError", "RemoteReconciliation",
     "FabricClient", "FabricPrincipal", "FabricServer", "FabricTransportError",
     "ClusterCoordinator", "ClusterConflict", "ClusterDenied", "ClusterWorker",
     "ClusterWorkerBackend", "JobFence", "JobLease", "JobSnapshot", "LeaseLost", "TenantSpec", "WorkerSession", "WorkerSpec",

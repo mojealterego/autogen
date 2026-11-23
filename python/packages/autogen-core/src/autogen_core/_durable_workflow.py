@@ -12,7 +12,7 @@ import math
 import os
 import sqlite3
 import time
-from collections.abc import Mapping, Sequence
+from collections.abc import Awaitable, Callable, Mapping, Sequence
 from contextlib import closing, contextmanager
 from contextvars import ContextVar
 from dataclasses import asdict, dataclass
@@ -65,6 +65,22 @@ class DurableWorkflowResult:
     statuses: dict[str, str]
     attempts: dict[str, int]
     journal_head: str
+
+
+@dataclass(frozen=True)
+class RemoteReconciliation:
+    """A trusted, read-only authority's observation of a durable attempt.
+
+    `operation_id` is the durable attempt's stable key, not a new action ID.
+    Readers are trusted application bindings, never tool definitions from an LLM.
+    """
+    tenant_id: str
+    operation_id: str
+    status: str
+    output: Any = None
+
+
+RemoteOutcomeReader = Callable[[AttemptContext], Awaitable[RemoteReconciliation | None]]
 
 
 @dataclass(frozen=True)
@@ -128,7 +144,7 @@ class _Journal:
         step = self.graph.get(event.step)
         before = self.statuses.get(event.step, 'pending')
         attempts = self.attempts.get(event.step, 0)
-        if step is None or before in _TERMINAL or type(event.attempt) is not int or not 0 <= event.attempt <= step.attempts:
+        if step is None or type(event.attempt) is not int or not 0 <= event.attempt <= step.attempts:
             raise CheckpointIntegrityError('invalid step state or attempt')
         dependencies = [self.statuses.get(d, 'pending') for d in step.dependencies]
         ready = all(s == 'succeeded' for s in dependencies)
@@ -137,11 +153,17 @@ class _Journal:
         elif event.status == 'retry_pending':
             valid = before == 'running' and event.attempt == attempts and step.idempotent and attempts < step.attempts
         elif event.status in ('succeeded', 'failed', 'uncertain'):
-            valid = before == 'running' and event.attempt == attempts
+            valid = (before == 'running' and event.attempt == attempts or
+                     before == 'uncertain' and event.status in ('succeeded', 'failed') and event.attempt == attempts)
         elif event.status == 'timed_out':
             valid = before in ('pending', 'retry_pending', 'running') and event.attempt == attempts
         elif event.status == 'skipped':
             valid = before == 'pending' and event.attempt == 0 and all(s in _TERMINAL for s in dependencies) and not ready
+        elif event.status == 'reopened':
+            # A skipped descendant never ran. A newly confirmed remote outcome
+            # may unblock it, but failed/uncertain dependencies must still veto.
+            valid = (before == 'skipped' and event.attempt == 0 and bool(dependencies)
+                     and all(s in ('pending', 'succeeded') for s in dependencies))
         else:
             valid = False
         if not valid:
@@ -152,8 +174,12 @@ class _Journal:
             raise CheckpointIntegrityError('unexpected output')
 
     def _apply(self, event: _Event, digest: str) -> None:
-        self.statuses[event.step] = event.status
-        self.attempts[event.step] = event.attempt
+        if event.status == 'reopened':
+            self.statuses.pop(event.step, None)
+            self.attempts.pop(event.step, None)
+        else:
+            self.statuses[event.step] = event.status
+            self.attempts[event.step] = event.attempt
         if event.status == 'succeeded':
             self.outputs[event.step] = event.output
         self.sequence += 1
@@ -273,6 +299,102 @@ class DurableWorkflowExecutor:
             journal.append(event)
             if event.status != 'retry_pending':
                 return
+
+    async def reconcile(
+        self, steps: Sequence[WorkflowStep], *, tenant_id: str, run_id: str,
+        workflow_revision: str, readers: Mapping[str, RemoteOutcomeReader],
+        expected_head: str, read_timeout: float = 10.0,
+    ) -> DurableWorkflowResult:
+        """Read late remote outcomes and advance the journal without dispatching work.
+
+        `expected_head` MUST be independently pinned by the trusted caller.
+        A configured reader is bound to a registered handler and must validate
+        the remote tenant and operation identity. Reads are non-mutating. Only
+        independently confirmed terminal states can change an uncertain step.
+        Skipped descendants are reopened *without running them* so a subsequent
+        explicit `run(..., expected_head=new_head)` can resume the DAG.
+        Original run deadline is never extended; a late result can be recorded
+        after expiry but new dependent work may then time out.
+        """
+        for name in (tenant_id, run_id, workflow_revision):
+            if type(name) is not str or not 0 < len(name) <= 256:
+                raise ValueError('identifiers must be nonempty strings of up to 256 characters')
+        if (type(expected_head) is not str or len(expected_head) != 64 or
+                any(c not in '0123456789abcdef' for c in expected_head)):
+            raise ValueError('reconciliation requires externally pinned SHA-256 journal head')
+        if (type(read_timeout) not in (int, float) or not math.isfinite(read_timeout)
+                or not .001 <= read_timeout <= 60):
+            raise ValueError('invalid reconciliation read timeout')
+        if not isinstance(readers, Mapping) or any(
+            type(k) is not str or not callable(v) for k, v in readers.items()
+        ):
+            raise ValueError('readers must be trusted callable handler bindings')
+        graph = self._validator._validate(steps)
+        if any(k not in self._handlers for k in readers):
+            raise ValueError('unknown remote reconciliation reader')
+        policy = asdict(self._policy)
+        policy['allowed_handlers'] = sorted(self._policy.allowed_handlers)
+        fingerprint = _hash([workflow_revision, policy, [asdict(graph[k]) for k in sorted(graph)]])
+        key = _hash([tenant_id, run_id])
+        with self._lock(key), closing(self._connect()) as db:
+            journal = _Journal(db, key, fingerprint, self._policy.deadline,
+                               graph, self._policy.max_result_bytes, expected_head)
+            # Stage reads and validate all outcomes *before* persisting any.
+            pending: list[_Event] = []
+            for step_id in sorted(graph):
+                if journal.statuses.get(step_id) != 'uncertain':
+                    continue
+                reader = readers.get(graph[step_id].handler)
+                if reader is None:
+                    continue
+                operation_id = _hash(['omega-operation-v1', key, step_id])
+                ctx = AttemptContext(tenant_id, run_id, step_id,
+                                     journal.attempts[step_id], operation_id)
+                try:
+                    result = await asyncio.wait_for(reader(ctx), read_timeout)
+                except asyncio.TimeoutError:
+                    # No late status is not proof of a failed remote job.
+                    continue
+                if result is None:
+                    continue
+                if (not isinstance(result, RemoteReconciliation)
+                        or result.tenant_id != tenant_id
+                        or result.operation_id != operation_id
+                        or result.status not in ('succeeded', 'failed')):
+                    raise CheckpointIntegrityError('untrusted remote outcome identity or state')
+                if result.status == 'failed' and result.output is not None:
+                    raise CheckpointIntegrityError('failed remote outcome cannot carry output')
+                if result.status == 'succeeded':
+                    try:
+                        encoded = _canonical(result.output)
+                        if len(encoded) > self._policy.max_result_bytes:
+                            raise CheckpointIntegrityError('late result exceeds output policy')
+                        output = json.loads(encoded)
+                    except (TypeError, ValueError, OverflowError, RecursionError) as exc:
+                        raise CheckpointIntegrityError('invalid late result serialization') from exc
+                else:
+                    output = None
+                pending.append(_Event(step_id, result.status,
+                                      journal.attempts[step_id], output))
+            for event in pending:
+                journal.append(event)
+            if any(event.status == 'succeeded' for event in pending):
+                # Fixpoint across the DAG: descendants of an originally
+                # skipped descendant may also become actionable.
+                while True:
+                    eligible = [
+                        k for k in sorted(graph)
+                        if journal.statuses.get(k) == 'skipped'
+                        and graph[k].dependencies
+                        and all(journal.statuses.get(d, 'pending') in ('pending', 'succeeded')
+                                for d in graph[k].dependencies)
+                    ]
+                    if not eligible:
+                        break
+                    for k in eligible:
+                        journal.append(_Event(k, 'reopened', 0))
+            return DurableWorkflowResult(dict(journal.outputs), dict(journal.statuses),
+                                         dict(journal.attempts), journal.head)
 
     async def run(self, steps: Sequence[WorkflowStep], *, tenant_id: str, run_id: str, workflow_revision: str, expected_head: str | None = None) -> DurableWorkflowResult:
         for name in (tenant_id, run_id, workflow_revision):

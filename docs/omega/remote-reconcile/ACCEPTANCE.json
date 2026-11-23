@@ -1,0 +1,72 @@
+{
+  "base_commit": "ddbb620029d4fac9e87c18a89d81067ef7041f3f",
+  "branch": "main",
+  "environment": {
+    "arch": "x86_64",
+    "python": "3.13.5",
+    "system": "Linux",
+    "test_dependencies": "original user-supplied jsonref+asyncio-atexit+autogen-ext wheels installed under isolated /mnt/data/mz13/deps; local core metadata only"
+  },
+  "release_gate": "BLOCKED_EXTERNAL_HA_AND_FULL_UPSTREAM_DEPENDENCIES",
+  "security": {
+    "external_pinned_head_required": true,
+    "multi_host_replicated_ha": false,
+    "original_deadline_extended": false,
+    "production_deployment": false,
+    "read_only_remote_reconciliation": true,
+    "remote_job_resubmission": false,
+    "tenant_identity_verification": true,
+    "verified_external_sink_fencing": false
+  },
+  "source_sha256": {
+    "docs/omega/remote-reconcile/demo.py": "0df378e2e0480e30e9763edddb5fd15fc02ac861bb96d21570aa48217473cb55",
+    "python/packages/autogen-core/src/autogen_core/__init__.py": "88a73d7814eb82982feff4d32ae5a8d5bef27dd259e178c534de20662c80d7c4",
+    "python/packages/autogen-core/src/autogen_core/_distributed_dag.py": "2ec08c4afec23428db1db21814a2601ad368cd86232ab32a2aee542875c479bc",
+    "python/packages/autogen-core/src/autogen_core/_durable_workflow.py": "94c4638a5c950488a10fa1fa48c90d1c53c42afb608b43bca423f4d13b0ce038",
+    "python/packages/autogen-core/tests/test_omega_reconciliation.py": "18db8d1abc783287680343c5c1ab300186e00ca8b8661da68ed2b7a67971edd9"
+  },
+  "stage": "OMEGA 13.0 late-remote reconciliation",
+  "tests": {
+    "ast": {
+      "errors": 0,
+      "files": 586,
+      "proof": "AST_COMPILE.json"
+    },
+    "demo": {
+      "executable": true,
+      "proof": "DEMO_RESULT.json",
+      "real_local_worker": true,
+      "replayed_remote_jobs": 0,
+      "result_value": 42
+    },
+    "focused": {
+      "command": "python -m pytest -q python/packages/autogen-core/omega_tests python/packages/autogen-core/tests/test_omega_*.py",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 199,
+      "proof": "FOCUSED_FINAL.txt"
+    },
+    "mtls": {
+      "real_tls_producer_and_worker": true,
+      "source": "test_late_remote_result_is_read_over_actual_mtls"
+    },
+    "stage": {
+      "command": "python -m pytest -q python/packages/autogen-core/tests/test_omega_reconciliation.py",
+      "exit_code": 0,
+      "failed": 0,
+      "passed": 18,
+      "proof": "STAGE_GREEN.txt"
+    },
+    "upstream": {
+      "blocking_modules": [
+        "pytest_mock",
+        "tiktoken"
+      ],
+      "collection_errors": 2,
+      "command": "python -m pytest -q python/packages/autogen-core/tests --continue-on-collection-errors",
+      "exit_code": 1,
+      "passed": 387,
+      "proof": "UPSTREAM_FINAL.txt"
+    }
+  }
+}

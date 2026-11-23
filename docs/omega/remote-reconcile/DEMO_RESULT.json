@@ -1,0 +1,1 @@
+{"dependent_value": 42, "final": {"dependent": "succeeded", "remote": "succeeded"}, "initial": {"dependent": "skipped", "remote": "uncertain"}, "journal_head": "5d34ce7ce63e08df7fbf70be587262694a9720df0ea28f1bdba23c2f1e24b09d", "reconciled": {"remote": "succeeded"}, "remote_resubmissions": 0}
