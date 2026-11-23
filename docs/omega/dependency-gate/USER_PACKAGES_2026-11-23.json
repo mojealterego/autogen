@@ -1,0 +1,140 @@
+{
+  "artifacts": [
+    {
+      "digest_verified": true,
+      "filename": "autogen_ext-0.7.5-py3-none-any.whl",
+      "format": "wheel",
+      "package": "autogen-ext",
+      "sha256": "18cecc8aab37c7c4861fbad038a1017f0ef25e35e273aa158066ccf9d93fea4f",
+      "size": 331380,
+      "verification_reference": "PyPI JSON 0.7.5",
+      "version": "0.7.5",
+      "wheel_record_sha256": "verified",
+      "zip_crc": "verified"
+    },
+    {
+      "digest_verified": true,
+      "filename": "autogen_ext-0.7.5.tar.gz",
+      "format": "sdist",
+      "package": "autogen-ext",
+      "sha256": "711ab9238ea66ff2abef163c331e538092bdea661620727a4a9b2ebce1c22df9",
+      "size": 417568,
+      "source_consistent_with_wheel": "yes",
+      "tar_headers": "verified",
+      "tar_members": 232,
+      "verification_reference": "PyPI JSON 0.7.5",
+      "version": "0.7.5"
+    },
+    {
+      "digest_verified": true,
+      "filename": "mock-5.2.0-py3-none-any.whl",
+      "format": "wheel",
+      "package": "mock",
+      "sha256": "7ba87f72ca0e915175596069dbbcc7c75af7b5e9b9bc107ad6349ede0819982f",
+      "size": 31617,
+      "verification_reference": "PyPI JSON 5.2.0",
+      "version": "5.2.0",
+      "wheel_record_sha256": "verified",
+      "zip_crc": "verified"
+    },
+    {
+      "digest_verified": true,
+      "filename": "mock-5.2.0.tar.gz",
+      "format": "sdist",
+      "package": "mock",
+      "sha256": "4e460e818629b4b173f32d08bf30d3af8123afbb8e04bb5707a1fd4799e503f0",
+      "size": 92796,
+      "source_consistent_with_wheel": "yes",
+      "tar_headers": "verified",
+      "tar_members": 47,
+      "verification_reference": "PyPI JSON 5.2.0",
+      "version": "5.2.0"
+    },
+    {
+      "digest_verified": true,
+      "filename": "asyncio_atexit-1.0.1-py3-none-any.whl",
+      "format": "wheel",
+      "package": "asyncio-atexit",
+      "sha256": "d93d5f7d5633a534abd521ce2896ed0fbe8de170bb1e65ec871d1c20eac9d376",
+      "size": 3752,
+      "verification_reference": "uv.lock",
+      "version": "1.0.1",
+      "wheel_record_sha256": "verified",
+      "zip_crc": "verified"
+    },
+    {
+      "digest_verified": false,
+      "filename": "asyncio-atexit-1.0.1.tar.gz.tar",
+      "format": "sdist",
+      "package": "asyncio-atexit",
+      "sha256": "1d0c71544b8ee2c484d322844ee72c0875dde6f250c0ed5b6993592ab9f7d436",
+      "size": 4373,
+      "source_consistent_with_wheel": "yes",
+      "tar_headers": "verified",
+      "tar_members": 16,
+      "verification_reference": "source matches pinned wheel, no independent source hash",
+      "version": "1.0.1"
+    },
+    {
+      "digest_verified": true,
+      "filename": "jsonref-1.1.0-py3-none-any.whl",
+      "format": "wheel",
+      "package": "jsonref",
+      "sha256": "590dc7773df6c21cbf948b5dac07a72a251db28b0238ceecce0a2abfa8ec30a9",
+      "size": 9425,
+      "verification_reference": "uv.lock (earlier upload)",
+      "version": "1.1.0",
+      "wheel_record_sha256": "verified",
+      "zip_crc": "verified"
+    }
+  ],
+  "base_commit": "49fe2c5dbc3307b2b05f7eb7c2103ab3ecd8edb6",
+  "evidence_timestamp_utc": "2026-11-23",
+  "focused": {
+    "exit_code": 0,
+    "passed": 158
+  },
+  "isolation": "pip --no-index --no-deps --target /mnt/data/mz_dep12/site",
+  "lock_audit": {
+    "packages": [
+      {
+        "filename": "asyncio_atexit-1.0.1-py3-none-any.whl",
+        "name": "asyncio-atexit",
+        "status": "verified",
+        "version": "1.0.1"
+      },
+      {
+        "filename": "jsonref-1.1.0-py3-none-any.whl",
+        "name": "jsonref",
+        "status": "verified",
+        "version": "1.1.0"
+      },
+      {
+        "filename": "pytest_mock-3.14.0-py3-none-any.whl",
+        "name": "pytest-mock",
+        "status": "missing",
+        "version": "3.14.0"
+      }
+    ]
+  },
+  "production_ready": false,
+  "python": "3.13.5",
+  "upstream": {
+    "additional_unverified_extras": [
+      "ollama",
+      "openai"
+    ],
+    "blocking_modules": [
+      "pytest_mock",
+      "tiktoken"
+    ],
+    "collection_errors": 2,
+    "exit_code": 1,
+    "passed": 346,
+    "record": "CORE_WITH_USER_WHEELS_2026-11-23.txt"
+  },
+  "wheel_verifier_tests": {
+    "exit_code": 0,
+    "passed": 5
+  }
+}

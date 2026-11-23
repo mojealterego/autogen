@@ -75,3 +75,11 @@ required `autogen-ext` extras (`ollama`, `openai` and `tiktoken`) into an
 isolated environment before running the full upstream suite. Never mark
 `OM-06 PASS` before a real `pytest` exit 0 and native distribution verification.
 No deployment or native .NET/Studio build was performed in this activity.
+
+## User-supplied distribution update (2026-11-23)
+
+See [`USER_PACKAGES_2026-11-23.md`](USER_PACKAGES_2026-11-23.md) and JSON provenance.
+The official `asyncio-atexit` wheel now exactly matches `python/uv.lock`,
+`autogen-ext` 0.7.5 is installed in an isolated test target, and `mock`
+5.2.0 is **not** `pytest-mock`. With supplied wheels: core **346 passed, 2
+collection errors**, and focused **158 passed**. Full regression gate **BLOCKED**.

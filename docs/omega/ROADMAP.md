@@ -7,7 +7,7 @@
 | OM-03 | Typed bounded DAG / retry policy | implemented / locally tested | cycle, unauthorized handler, budget, timeout, concurrency, dependent skip |
 | OM-04 | Runtime adapter | implemented / integration tested locally | real registered RoutedAgent with two dependent nodes |
 | OM-05 | Linked audit metadata | implemented / locally tested | hash verification and tampering tests |
-| OM-06 | Full upstream regression | BLOCKED | with pinned user `jsonref` and tagged `asyncio_atexit` source: 329 passed, 2 collection errors (`pytest_mock`, optional `autogen_ext` extras); see `dependency-gate/` |
+| OM-06 | Full upstream regression | BLOCKED | pinned `asyncio-atexit` + `jsonref` wheels, authentic `autogen-ext`: 346 passed, 2 collection errors (`pytest_mock`, `tiktoken`); `ollama` extras pending; see `dependency-gate/USER_PACKAGES_2026-11-23.md` |
 | OM-07 | Durable checkpoint/recovery (single host) | implemented / locally integration tested | SQLite WAL, real child process failure, replay, retry key, persisted deadline, lock and journal tests; see `durable/` |
 | OM-08 | Process sandbox / cross-tenant isolation | open | negative authorized/unauthorized tests with real processes |
 | OM-09 | Distributed scheduling and model evaluation | open | multi-host failure injection and reproducible model/cost measurements |
@@ -44,3 +44,5 @@
 | OM-38 | LTN learned constraints + hard formal verifier | open | actual LTN training and SMT/proof artifacts where claimed |
 | OM-39 | Durable authenticated multi-host HITL | open | identity provider, PostgreSQL, genuine actor auth, revoke, signed audit, crash recovery |
 | OM-40 | RSI controlled source evolution | open | separate evaluation, signed approvals, tests, releases, bounded rollback |
+
+| OM-41 | User-distribution provenance and dependency replay | partial / locally tested | original wheels, RECORD digests and official hash checks; 158 focused tests green, 346 core pass, 2 collection errors; `dependency-gate/` |

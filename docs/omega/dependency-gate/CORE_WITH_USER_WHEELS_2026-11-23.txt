@@ -1,0 +1,63 @@
+........................................................................ [ 20%]
+........................................................................ [ 41%]
+........................................................................ [ 62%]
+........................................................................ [ 83%]
+..........................................................               [100%]
+==================================== ERRORS ====================================
+__________________ ERROR collecting tests/test_base_agent.py ___________________
+ImportError while importing test module '/mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_base_agent.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/tests/test_base_agent.py:4: in <module>
+    from pytest_mock import MockerFixture
+E   ModuleNotFoundError: No module named 'pytest_mock'
+_________________ ERROR collecting tests/test_model_context.py _________________
+ImportError while importing test module '/mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_model_context.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.13/importlib/__init__.py:88: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+python/packages/autogen-core/tests/test_model_context.py:17: in <module>
+    from autogen_ext.models.ollama import OllamaChatCompletionClient
+../../mz_dep12/site/autogen_ext/models/ollama/__init__.py:1: in <module>
+    from ._ollama_client import OllamaChatCompletionClient
+../../mz_dep12/site/autogen_ext/models/ollama/_ollama_client.py:22: in <module>
+    import tiktoken
+E   ModuleNotFoundError: No module named 'tiktoken'
+=============================== warnings summary ===============================
+tests/test_component_config.py::test_function_tool
+tests/test_static_workbench_overrides.py::test_static_workbench_serialization_with_overrides
+tests/test_workbench.py::test_static_workbench
+  /mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/src/autogen_core/_component_config.py:298: UserWarning: 
+  ⚠️  SECURITY WARNING ⚠️
+  Loading a FunctionTool from config will execute code to import the provided global imports and and function code.
+  Only load configs from TRUSTED sources to prevent arbitrary code execution.
+    instance = component_class._from_config(validated_config)  # type: ignore
+
+tests/test_json_to_pydantic.py::test_array_items_with_object_schema_properties
+  /mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_json_to_pydantic.py:895: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    assert hasattr(first_user, "model_fields")  # type: ignore[reportUnknownArgumentType]
+
+tests/test_json_to_pydantic.py::test_nested_arrays_with_object_schemas
+  /mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_json_to_pydantic.py:1031: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    assert hasattr(company, "model_fields")  # type: ignore[reportUnknownArgumentType]
+
+tests/test_json_to_pydantic.py::test_nested_arrays_with_object_schemas
+  /mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_json_to_pydantic.py:1036: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    assert hasattr(engineering_dept, "model_fields")  # type: ignore[reportUnknownArgumentType]
+
+tests/test_json_to_pydantic.py::test_nested_arrays_with_object_schemas
+  /mnt/data/magnetic_ooda/autogen-main/python/packages/autogen-core/tests/test_json_to_pydantic.py:1041: PydanticDeprecatedSince211: Accessing the 'model_fields' attribute on the instance is deprecated. Instead, you should access this attribute from the model class. Deprecated in Pydantic V2.11 to be removed in V3.0.
+    assert hasattr(alice, "model_fields")  # type: ignore[reportUnknownArgumentType]
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+ERROR python/packages/autogen-core/tests/test_base_agent.py
+ERROR python/packages/autogen-core/tests/test_model_context.py
+346 passed, 7 warnings, 2 errors in 18.78s
+
+EXIT_CODE=1
