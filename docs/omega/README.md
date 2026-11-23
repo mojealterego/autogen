@@ -108,3 +108,9 @@ comparisons, operator-gated promotion and measured rollback.
 
 See [neurosymbolic](neurosymbolic/README.md) for a bounded no-eval typed
 AST interpreter, deterministic redacted evidence, and guarded agent handlers.
+
+## Autonomous Infrastructure 10.0 — local supervisor subset
+
+See [infrastructure](infrastructure/README.md) for bounded process supervision,
+health checks, restart recovery, process-tree cleanup and redacted audit.
+Multi-host autonomy and production rollout remain open.
