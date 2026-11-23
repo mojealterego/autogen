@@ -117,6 +117,7 @@ from ._distributed_dag import distributed_step_handler, ProducerBackend, RemoteS
 from ._resource_scheduler import AdmissionDenied, QueueFull, Resources, ResourceScheduler, SchedulerSnapshot, scheduled_handler
 
 __all__ = [
+    "SymbolicRule", "SymbolicVerdict", "SymbolicGate", "SymbolicDenied", "symbolically_guarded",
     "WorkflowEvolutionEngine", "EvolutionCandidate", "EvolutionCase", "EvolutionPolicy", "EvolutionObservation", "EvolutionDecision", "EvolutionSnapshot", "EvolutionDenied",
     "HierarchicalSwarm", "SwarmAgent", "SwarmNode", "SwarmPolicy", "SwarmReport", "SwarmDenied",
     "OpenAIChatProvider",
@@ -213,3 +214,5 @@ __all__ = [
 from ._hierarchical_swarm import HierarchicalSwarm, SwarmAgent, SwarmNode, SwarmPolicy, SwarmReport, SwarmDenied
 
 from ._workflow_evolution import (WorkflowEvolutionEngine, EvolutionCandidate, EvolutionCase, EvolutionPolicy, EvolutionObservation, EvolutionDecision, EvolutionSnapshot, EvolutionDenied)
+
+from ._neurosymbolic_gate import SymbolicRule, SymbolicVerdict, SymbolicGate, SymbolicDenied, symbolically_guarded

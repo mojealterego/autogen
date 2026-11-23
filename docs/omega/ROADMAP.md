@@ -33,3 +33,4 @@
 | OM-27 | Persistent distributed router cost ledger & genuine provider benchmark | open | atomic cross-process quotas, invoice reconciliation, real-provider evaluation dataset, p95/p99 benchmark and safe rollout |
 | OM-28 | Hierarchical bounded local agent swarm (7.0) | implemented / locally integration tested | hierarchy and tenant authorization, independent verification, operator grants, DAG bounded execution; `swarm/` |
 | OM-29 | Deterministic offline workflow policy evaluation and rollback gate (8.0) | implemented / locally tested | accuracy/cost/p95 gates, bounded samples, evidence fingerprint, explicit approval and canary rollback; `evolution/` |
+| OM-30 | Bounded typed AST runtime policy proof gate (9.0) | implemented / locally integration tested | injection denial, typed validation, bounded execution, redacted evidence hash and guarded swarm invocation; `neurosymbolic/` |

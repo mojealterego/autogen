@@ -103,3 +103,8 @@ tenant authorization, verifier veto and operator approval gates.
 
 See [evolution](evolution/README.md) for deterministic fixture-based policy
 comparisons, operator-gated promotion and measured rollback.
+
+## Neuro-Symbolic Verification 9.0
+
+See [neurosymbolic](neurosymbolic/README.md) for a bounded no-eval typed
+AST interpreter, deterministic redacted evidence, and guarded agent handlers.
