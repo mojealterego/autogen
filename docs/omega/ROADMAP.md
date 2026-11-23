@@ -57,6 +57,6 @@
 
 | OM-49 | Five-direction research integration 14.0 | local subset under verification; production BLOCKED | bounded PyTorch MAL/R3, CWM HTTP fixture, soft LTN + hard finite proof, gated RSI source mutation; `research-cognition/` |
 
-| OM-49 | Upstream LTNtorch 1.0.2 (15.0) | implemented / locally integrated with exact user source | real `ltn.Variable`, `Predicate`, `Connective`, `Quantifier` and `SatAgg`, learned FOL satisfaction and hard symbolic veto; no SMT completeness; `upstream-integration/` |
+| OM-52 | Upstream LTNtorch 1.0.2 (15.0) | implemented / locally integrated with exact user source | real `ltn.Variable`, `Predicate`, `Connective`, `Quantifier` and `SatAgg`, learned FOL satisfaction and hard symbolic veto; no SMT completeness; `upstream-integration/` |
 | OM-50 | Original Meta CWM Fastgen compatibility (15.0) | partial / local protocol tested | Meta `/chat/completions` route, `reasoning.enabled=false`, original server source AST comparison, read-only bounded trace parser and independent comparison; actual CWM 32B inference BLOCKED (no weights) |
 | OM-51 | Pinned third-party source provenance (15.0) | implemented / locally tested | original uploaded LTNtorch and CWM archives pass SHA-256, ZIP CRC and anti-traversal/expansion checks; 6 negative/success tests; model weights absent |
