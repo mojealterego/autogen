@@ -76,3 +76,4 @@
 | OM-66 | Hash-linked execution audit (19.0) | implemented / unverified | in-memory SHA-256 chain and verifier; test 08 committed; signatures and durable tamper evidence OPEN |
 | OM-67 | Rejected-call accounting and identifier validation (19.0) | implemented / unverified | failed policy calls not charged, request id validated; tests 09-10 committed; stress/fuzz OPEN |
 | OM-68 | End-to-end AutoGen release acceptance (19.0) | BLOCKED | real AgentChat FunctionTool integration, full exact-SHA tests, authenticated HITL, crash recovery and GATE-09 evidence NOT RUN |
+| OM-69 | Global forensic mobile artifact static triage (20.0) | implemented on main / 7 tests committed; exact SHA tests NOT RUN | bounded no-follow file reading, SHA-256 evidence, GIF magic, ZIP/PassKit structure and anti-traversal/zip-bomb checks; no malware execution or Pegasus infection attribution; `_pegasus_evidence.py`, `test_pegasus_evidence.py` |
