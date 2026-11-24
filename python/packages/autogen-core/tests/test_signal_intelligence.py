@@ -32,5 +32,30 @@ class SignalIntelligenceTests(unittest.TestCase):
     def test_empty(self):
         self.assertEqual(correlate_events((), tenant_id="a").score, 0)
 
+    def test_invalid_domain(self):
+        with self.assertRaises(ValueError):
+            event(domain="fake")
+
+    def test_invalid_tenant(self):
+        with self.assertRaises(ValueError):
+            correlate_events((), tenant_id="../bad/")
+
+    def test_score_window_not_global(self):
+        result = correlate_events((event("rf", 0, 10), event("usb", 1, 10), event("network", 50000, 10)), tenant_id="a")
+        self.assertEqual(result.domains, ("rf", "usb"))
+        self.assertEqual(result.score, 20)
+
+    def test_reject_non_tuple(self):
+        with self.assertRaises(ValueError):
+            correlate_events([event()], tenant_id="a")
+
+    def test_max_events(self):
+        result = correlate_events((event(),) * 1024, tenant_id="a")
+        self.assertEqual(result.event_count, 1024)
+
+    def test_window_validation(self):
+        with self.assertRaises(ValueError):
+            correlate_events((), tenant_id="a", window_ms=True)
+
 if __name__ == "__main__":
     unittest.main()
