@@ -39,4 +39,15 @@ class IngestTests(unittest.IsolatedAsyncioTestCase):
         with self.assertRaises(PermissionError): await s.submit_batch((e,e|{'tenant_id':'b'}))
         self.assertEqual((await s.correlate('a')).event_count,0)
 
+    async def test_drain_frees_capacity_and_is_tenant_scoped(self):
+        s=SignalIngestor({'s':SourcePolicy('a',frozenset({'rf'})), 't':SourcePolicy('b',frozenset({'usb'}))},max_queue=1)
+        a={'version':1,'tenant_id':'a','source_id':'s','domain':'rf','timestamp_ms':0,'kind':'x','severity':1}
+        b={'version':1,'tenant_id':'b','source_id':'t','domain':'usb','timestamp_ms':0,'kind':'x','severity':1}
+        await s.submit_batch((a,b))
+        self.assertEqual(len(await s.drain('a')),1)
+        self.assertEqual((await s.correlate('a')).event_count,0)
+        self.assertEqual((await s.correlate('b')).event_count,1)
+        await s.submit(a)
+        with self.assertRaises(PermissionError): await s.drain('unknown')
+
 if __name__=='__main__':unittest.main()
