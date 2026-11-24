@@ -9,7 +9,8 @@ class FakeSession:
     def execute_write(self, callback): return callback(self)
     def run(self, query, **kwargs):
         self.calls.append((query,kwargs))
-        return None
+        return self
+    def consume(self): return None
 
 class FakeDriver:
     def __init__(self): self.session_instance=FakeSession(); self.database=None
