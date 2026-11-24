@@ -10,7 +10,7 @@ class VectorTests(unittest.TestCase):
         client=FakeQdrant()
         store=QdrantEvidenceStore(client,collection="evidence")
         store.upsert(VectorEvidence("tenant","case","item",("a"*64), (0.5,0.25)))
-        payload=client.calls[0]["points"][0]["payload"]
+        payload=client.calls[0]["points"][0].payload
         self.assertEqual((payload["tenant_id"],payload["case_id"]),("tenant","case"))
         self.assertNotIn("raw_text",payload)
     def test_invalid_vector(self):
