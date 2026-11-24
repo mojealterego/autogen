@@ -30,7 +30,7 @@ class ScopedRouter:
     @staticmethod
     def _key(tenant_id: str, case_id: str) -> tuple[str, str]:
         for value in (tenant_id, case_id):
-            if not isinstance(value, str) or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", value):
+            if type(value) is not str or not re.fullmatch(r"[A-Za-z0-9][A-Za-z0-9._-]{0,127}", value):
                 raise ValueError("invalid_scope")
         return tenant_id, case_id
 
