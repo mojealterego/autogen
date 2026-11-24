@@ -26,12 +26,16 @@ class ForensicToolDispatcher:
         self._grants = dict(grants)
         self._policy = ToolPolicy()
 
-    def execute(self, context: DispatchContext, tool_name: str, payload: Mapping[str, Any]) -> object:
+    def authorize(self, context: DispatchContext, tool_name: str) -> None:
+        """Re-evaluate grants on every request, including idempotent retries."""
         if not isinstance(context, DispatchContext):
             raise TypeError("invalid_context")
         request = ToolRequest(context.tenant_id, tool_name, context.case_id)
         if self._policy.evaluate(request, self._grants).decision != Decision.ALLOW:
             raise PermissionError("tool_not_authorized")
+
+    def execute(self, context: DispatchContext, tool_name: str, payload: Mapping[str, Any]) -> object:
+        self.authorize(context, tool_name)
         if not isinstance(payload, Mapping):
             raise ValueError("invalid_payload")
         if tool_name == "imei_structure_check":
