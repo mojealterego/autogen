@@ -72,3 +72,12 @@ class SignalIngestor:
         async with self._lock:
             snapshot = tuple(self._queue[tenant_id])
         return correlate_events(snapshot, tenant_id=tenant_id, window_ms=window_ms)
+
+    async def drain(self, tenant_id: str) -> tuple[SignalEvent, ...]:
+        """Atomically remove queued events for one authorized tenant."""
+        if not isinstance(tenant_id, str) or tenant_id not in self._queue:
+            raise PermissionError('unknown_tenant')
+        async with self._lock:
+            events = tuple(self._queue[tenant_id])
+            self._queue[tenant_id].clear()
+        return events
