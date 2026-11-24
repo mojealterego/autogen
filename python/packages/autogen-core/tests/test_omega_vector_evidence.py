@@ -21,4 +21,13 @@ class VectorTests(unittest.TestCase):
         with self.assertRaises(ValueError): VectorEvidence("../t","c","i","a"*64,(1.0,))
     def test_invalid_digest(self):
         with self.assertRaises(ValueError): VectorEvidence("t","c","i","bad",(1.0,))
+    def test_point_identity_is_scoped_and_stable(self):
+        client=FakeQdrant()
+        store=QdrantEvidenceStore(client,collection="evidence")
+        for tenant,case in (("t","c"),("t","c"),("other","c"),("t","other")):
+            store.upsert(VectorEvidence(tenant,case,"item","a"*64,(1.0,)))
+        ids=[call["points"][0].id for call in client.calls]
+        self.assertEqual(ids[0],ids[1])
+        self.assertEqual(len(set(ids)),3)
+        self.assertTrue(all(call["wait"] for call in client.calls))
 if __name__=="__main__": unittest.main()
