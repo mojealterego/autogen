@@ -7,7 +7,7 @@ from collections import Counter
 from dataclasses import dataclass
 from typing import Literal
 
-_IDENTIFIER = re.compile(r"[A-Za-z0-9._-]{1,128}\\Z")
+_IDENTIFIER = re.compile(r"[A-Za-z0-9._-]{1,128}\Z")
 _DOMAINS = frozenset(("rf", "navigation", "usb", "network"))
 
 @dataclass(frozen=True)
