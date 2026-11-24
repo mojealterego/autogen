@@ -66,6 +66,7 @@ class GuardedExecution:
         key = (context.tenant_id, context.case_id, request_id)
         quota_key = (context.tenant_id, context.case_id)
         with self._lock:
+            self._dispatcher.authorize(context, tool_name)
             if key in self._replay:
                 old_fingerprint, old_result = self._replay[key]
                 if old_fingerprint != fingerprint:
