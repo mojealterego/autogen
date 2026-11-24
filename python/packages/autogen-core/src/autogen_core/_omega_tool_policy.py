@@ -53,7 +53,7 @@ class ToolPolicy:
             return PolicyResult(Decision.DENY, "tool_not_permitted")
         # Scopes are keyed by case, and the caller must supply only scopes
         # authenticated for request.tenant_id. No cross-tenant scope fallback.
-        permitted = scopes.get(request.case_id)
+        permitted = scopes.get(f"{request.tenant_id}:{request.case_id}")
         if not isinstance(permitted, frozenset) or request.tool_name not in permitted:
             return PolicyResult(Decision.DENY, "scope_missing")
         return PolicyResult(Decision.ALLOW, "read_only_scope_authorized")
